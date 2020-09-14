@@ -70,17 +70,62 @@ CMakeFiles/p1.dir/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/p1.dir/main.c.s"
 	/Users/gravescn/opt/anaconda3/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/main.c" -o CMakeFiles/p1.dir/main.c.s
 
+CMakeFiles/p1.dir/read.c.o: CMakeFiles/p1.dir/flags.make
+CMakeFiles/p1.dir/read.c.o: ../read.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/p1.dir/read.c.o"
+	/Users/gravescn/opt/anaconda3/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/p1.dir/read.c.o   -c "/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/read.c"
+
+CMakeFiles/p1.dir/read.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/p1.dir/read.c.i"
+	/Users/gravescn/opt/anaconda3/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/read.c" > CMakeFiles/p1.dir/read.c.i
+
+CMakeFiles/p1.dir/read.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/p1.dir/read.c.s"
+	/Users/gravescn/opt/anaconda3/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/read.c" -o CMakeFiles/p1.dir/read.c.s
+
+CMakeFiles/p1.dir/parse.c.o: CMakeFiles/p1.dir/flags.make
+CMakeFiles/p1.dir/parse.c.o: ../parse.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/p1.dir/parse.c.o"
+	/Users/gravescn/opt/anaconda3/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/p1.dir/parse.c.o   -c "/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/parse.c"
+
+CMakeFiles/p1.dir/parse.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/p1.dir/parse.c.i"
+	/Users/gravescn/opt/anaconda3/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/parse.c" > CMakeFiles/p1.dir/parse.c.i
+
+CMakeFiles/p1.dir/parse.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/p1.dir/parse.c.s"
+	/Users/gravescn/opt/anaconda3/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/parse.c" -o CMakeFiles/p1.dir/parse.c.s
+
+CMakeFiles/p1.dir/execute.c.o: CMakeFiles/p1.dir/flags.make
+CMakeFiles/p1.dir/execute.c.o: ../execute.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/p1.dir/execute.c.o"
+	/Users/gravescn/opt/anaconda3/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/p1.dir/execute.c.o   -c "/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.c"
+
+CMakeFiles/p1.dir/execute.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/p1.dir/execute.c.i"
+	/Users/gravescn/opt/anaconda3/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.c" > CMakeFiles/p1.dir/execute.c.i
+
+CMakeFiles/p1.dir/execute.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/p1.dir/execute.c.s"
+	/Users/gravescn/opt/anaconda3/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.c" -o CMakeFiles/p1.dir/execute.c.s
+
 # Object files for target p1
 p1_OBJECTS = \
-"CMakeFiles/p1.dir/main.c.o"
+"CMakeFiles/p1.dir/main.c.o" \
+"CMakeFiles/p1.dir/read.c.o" \
+"CMakeFiles/p1.dir/parse.c.o" \
+"CMakeFiles/p1.dir/execute.c.o"
 
 # External object files for target p1
 p1_EXTERNAL_OBJECTS =
 
 p1: CMakeFiles/p1.dir/main.c.o
+p1: CMakeFiles/p1.dir/read.c.o
+p1: CMakeFiles/p1.dir/parse.c.o
+p1: CMakeFiles/p1.dir/execute.c.o
 p1: CMakeFiles/p1.dir/build.make
 p1: CMakeFiles/p1.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable p1"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable p1"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/p1.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

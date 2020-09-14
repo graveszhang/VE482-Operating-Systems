@@ -1,5 +1,8 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/p1.dir/execute.c.o"
   "CMakeFiles/p1.dir/main.c.o"
+  "CMakeFiles/p1.dir/parse.c.o"
+  "CMakeFiles/p1.dir/read.c.o"
   "p1"
   "p1.pdb"
 )

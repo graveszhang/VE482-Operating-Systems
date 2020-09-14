@@ -123,6 +123,33 @@ p1/fast:
 	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/build
 .PHONY : p1/fast
 
+execute.o: execute.c.o
+
+.PHONY : execute.o
+
+# target to build an object file
+execute.c.o:
+	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/execute.c.o
+.PHONY : execute.c.o
+
+execute.i: execute.c.i
+
+.PHONY : execute.i
+
+# target to preprocess a source file
+execute.c.i:
+	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/execute.c.i
+.PHONY : execute.c.i
+
+execute.s: execute.c.s
+
+.PHONY : execute.s
+
+# target to generate assembly for a file
+execute.c.s:
+	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/execute.c.s
+.PHONY : execute.c.s
+
 main.o: main.c.o
 
 .PHONY : main.o
@@ -150,6 +177,60 @@ main.c.s:
 	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/main.c.s
 .PHONY : main.c.s
 
+parse.o: parse.c.o
+
+.PHONY : parse.o
+
+# target to build an object file
+parse.c.o:
+	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/parse.c.o
+.PHONY : parse.c.o
+
+parse.i: parse.c.i
+
+.PHONY : parse.i
+
+# target to preprocess a source file
+parse.c.i:
+	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/parse.c.i
+.PHONY : parse.c.i
+
+parse.s: parse.c.s
+
+.PHONY : parse.s
+
+# target to generate assembly for a file
+parse.c.s:
+	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/parse.c.s
+.PHONY : parse.c.s
+
+read.o: read.c.o
+
+.PHONY : read.o
+
+# target to build an object file
+read.c.o:
+	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/read.c.o
+.PHONY : read.c.o
+
+read.i: read.c.i
+
+.PHONY : read.i
+
+# target to preprocess a source file
+read.c.i:
+	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/read.c.i
+.PHONY : read.c.i
+
+read.s: read.c.s
+
+.PHONY : read.s
+
+# target to generate assembly for a file
+read.c.s:
+	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/read.c.s
+.PHONY : read.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -159,9 +240,18 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... p1"
+	@echo "... execute.o"
+	@echo "... execute.i"
+	@echo "... execute.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... parse.o"
+	@echo "... parse.i"
+	@echo "... parse.s"
+	@echo "... read.o"
+	@echo "... read.i"
+	@echo "... read.s"
 .PHONY : help
 
 

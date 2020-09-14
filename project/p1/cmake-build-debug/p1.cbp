@@ -74,7 +74,25 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.c">
+			<Option target="p1"/>
+		</Unit>
+		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.h">
+			<Option target="p1"/>
+		</Unit>
 		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/main.c">
+			<Option target="p1"/>
+		</Unit>
+		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/parse.c">
+			<Option target="p1"/>
+		</Unit>
+		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/parse.h">
+			<Option target="p1"/>
+		</Unit>
+		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/read.c">
+			<Option target="p1"/>
+		</Unit>
+		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/read.h">
 			<Option target="p1"/>
 		</Unit>
 		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/CMakeLists.txt">
