@@ -3,6 +3,7 @@
 
 CMakeFiles/p1.dir/execute.c.o: ../execute.c
 CMakeFiles/p1.dir/execute.c.o: ../execute.h
+CMakeFiles/p1.dir/execute.c.o: ../redirect.h
 
 CMakeFiles/p1.dir/main.c.o: ../execute.h
 CMakeFiles/p1.dir/main.c.o: ../main.c
@@ -14,4 +15,7 @@ CMakeFiles/p1.dir/parse.c.o: ../parse.h
 
 CMakeFiles/p1.dir/read.c.o: ../read.c
 CMakeFiles/p1.dir/read.c.o: ../read.h
+
+CMakeFiles/p1.dir/redirect.c.o: ../redirect.c
+CMakeFiles/p1.dir/redirect.c.o: ../redirect.h
 

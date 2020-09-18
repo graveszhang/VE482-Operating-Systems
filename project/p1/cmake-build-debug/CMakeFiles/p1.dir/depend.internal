@@ -4,6 +4,7 @@
 CMakeFiles/p1.dir/execute.c.o
  /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.c
  /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.h
+ /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/redirect.h
 CMakeFiles/p1.dir/main.c.o
  /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.h
  /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/main.c
@@ -15,3 +16,6 @@ CMakeFiles/p1.dir/parse.c.o
 CMakeFiles/p1.dir/read.c.o
  /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/read.c
  /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/read.h
+CMakeFiles/p1.dir/redirect.c.o
+ /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/redirect.c
+ /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/redirect.h

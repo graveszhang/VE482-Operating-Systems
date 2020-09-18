@@ -7,6 +7,7 @@
 #include <stdlib.h>
 char * mread() {
     printf("mumsh $ ");
+    fflush(stdout);
 
     int c;
     int i = 0;

@@ -1,0 +1,10 @@
+total 136
+drwxr-xr-x   9 gravescn  staff    288 Sep 18 19:40 .
+drwxr-xr-x  15 gravescn  staff    480 Sep 18 19:39 ..
+-rwxrwxrwx   1 gravescn  staff      0 Sep 18 19:40 1.txt
+-rw-r--r--   1 gravescn  staff  22739 Sep 18 18:51 CMakeCache.txt
+drwxr-xr-x  14 gravescn  staff    448 Sep 18 19:40 CMakeFiles
+-rw-r--r--   1 gravescn  staff   7620 Sep 18 18:51 Makefile
+-rw-r--r--   1 gravescn  staff   1502 Sep 18 18:51 cmake_install.cmake
+-rwxr-xr-x   1 gravescn  staff  19244 Sep 18 19:39 p1
+-rw-r--r--   1 gravescn  staff   8677 Sep 18 18:51 p1.cbp

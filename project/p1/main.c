@@ -13,9 +13,14 @@ int main() {
         line = mread();
         if (!strcmp(line,"exit")){
             printf("exit\n");
+            fflush(stdout);
             break;
         }
         cmd = mparse(line);
+
+//        for (int i = 0; i < 4; i++)
+//            printf("cmd[%d] is %s\n", i, cmd[i]);
+
         valid = mexec(cmd);
     }
     free(line);

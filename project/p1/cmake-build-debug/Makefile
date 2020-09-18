@@ -231,6 +231,33 @@ read.c.s:
 	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/read.c.s
 .PHONY : read.c.s
 
+redirect.o: redirect.c.o
+
+.PHONY : redirect.o
+
+# target to build an object file
+redirect.c.o:
+	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/redirect.c.o
+.PHONY : redirect.c.o
+
+redirect.i: redirect.c.i
+
+.PHONY : redirect.i
+
+# target to preprocess a source file
+redirect.c.i:
+	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/redirect.c.i
+.PHONY : redirect.c.i
+
+redirect.s: redirect.c.s
+
+.PHONY : redirect.s
+
+# target to generate assembly for a file
+redirect.c.s:
+	$(MAKE) -f CMakeFiles/p1.dir/build.make CMakeFiles/p1.dir/redirect.c.s
+.PHONY : redirect.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -252,6 +279,9 @@ help:
 	@echo "... read.o"
 	@echo "... read.i"
 	@echo "... read.s"
+	@echo "... redirect.o"
+	@echo "... redirect.i"
+	@echo "... redirect.s"
 .PHONY : help
 
 
