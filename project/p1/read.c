@@ -5,6 +5,7 @@
 #include "read.h"
 #include <stdio.h>
 #include <stdlib.h>
+
 char * mread() {
     printf("mumsh $ ");
     fflush(stdout);
@@ -16,6 +17,7 @@ char * mread() {
     char *buffer = malloc(sizeof(char) * buffersize);
 
     if (!buffer) {
+        free(buffer);
         exit(1);
     }
 
@@ -31,11 +33,16 @@ char * mread() {
 
         if (i >= buffersize) {
             buffersize += 1024;
+            char *buffer_backup = buffer;
             buffer = realloc(buffer, buffersize);
             if (!buffer) {
+                buffer = buffer_backup;
                 exit(1);
+            } else{
+                buffer_backup = NULL;
             }
         }
     }
+    return buffer;
 }
 
