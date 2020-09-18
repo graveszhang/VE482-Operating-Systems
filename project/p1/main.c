@@ -12,6 +12,7 @@ int main() {
     while (valid){
         line = mread();
         if (!strcmp(line,"exit")){
+            printf("exit\n");
             break;
         }
         cmd = mparse(line);
