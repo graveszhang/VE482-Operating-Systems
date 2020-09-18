@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6"/>
 	<Project>
-		<Option title="p1"/>
+		<Option title="Project"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="clang"/>
 		<Option virtualFolders="CMake Files\;"/>
@@ -37,8 +37,8 @@
 					<DistClean command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="p1">
-				<Option output="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/p1" prefix_auto="0" extension_auto="0"/>
+			<Target title="mumsh_memory_check">
+				<Option output="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/mumsh_memory_check" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -50,14 +50,14 @@
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 p1"/>
+					<Build command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 mumsh_memory_check"/>
 					<CompileFile command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="p1/fast">
-				<Option output="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/p1" prefix_auto="0" extension_auto="0"/>
+			<Target title="mumsh_memory_check/fast">
+				<Option output="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/mumsh_memory_check" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -69,7 +69,45 @@
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 p1/fast"/>
+					<Build command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 mumsh_memory_check/fast"/>
+					<CompileFile command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mumsh">
+				<Option output="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/mumsh" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/Users/gravescn/opt/anaconda3/bin/../include/c++/v1"/>
+					<Add directory="/Users/gravescn/opt/anaconda3/bin/../lib/clang/4.0.1/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 mumsh"/>
+					<CompileFile command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mumsh/fast">
+				<Option output="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/mumsh" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/Users/gravescn/opt/anaconda3/bin/../include/c++/v1"/>
+					<Add directory="/Users/gravescn/opt/anaconda3/bin/../lib/clang/4.0.1/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 mumsh/fast"/>
 					<CompileFile command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/Users/gravescn/opt/anaconda3/bin/make -j12 -f &quot;/Users/gravescn/Desktop/GS/Coding\ Projects/VE482-Intro-to-Operating-Systems/project/p1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -77,31 +115,40 @@
 			</Target>
 		</Build>
 		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.c">
-			<Option target="p1"/>
+			<Option target="mumsh_memory_check"/>
+			<Option target="mumsh"/>
 		</Unit>
 		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.h">
-			<Option target="p1"/>
+			<Option target="mumsh_memory_check"/>
+			<Option target="mumsh"/>
 		</Unit>
 		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/main.c">
-			<Option target="p1"/>
+			<Option target="mumsh_memory_check"/>
+			<Option target="mumsh"/>
 		</Unit>
 		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/parse.c">
-			<Option target="p1"/>
+			<Option target="mumsh_memory_check"/>
+			<Option target="mumsh"/>
 		</Unit>
 		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/parse.h">
-			<Option target="p1"/>
+			<Option target="mumsh_memory_check"/>
+			<Option target="mumsh"/>
 		</Unit>
 		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/read.c">
-			<Option target="p1"/>
+			<Option target="mumsh_memory_check"/>
+			<Option target="mumsh"/>
 		</Unit>
 		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/read.h">
-			<Option target="p1"/>
+			<Option target="mumsh_memory_check"/>
+			<Option target="mumsh"/>
 		</Unit>
 		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/redirect.c">
-			<Option target="p1"/>
+			<Option target="mumsh_memory_check"/>
+			<Option target="mumsh"/>
 		</Unit>
 		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/redirect.h">
-			<Option target="p1"/>
+			<Option target="mumsh_memory_check"/>
+			<Option target="mumsh"/>
 		</Unit>
 		<Unit filename="/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>

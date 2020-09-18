@@ -19,7 +19,7 @@ char * mread() {
         exit(1);
     }
 
-    while ((c=getchar())!=EOF) {
+    while ((c = getchar()) != EOF) {
 
         if (c == '\n') {
             buffer[i] = '\0';

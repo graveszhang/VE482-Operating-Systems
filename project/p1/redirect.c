@@ -29,12 +29,10 @@ static void rout(char *filename){
         printf("Error! No file name found.\n");
     umask(0000);
     int fd_out = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
-    if (fd_out > 0) {
+    if (fd_out > 0)
         dup2(fd_out, 1);
-    }
-    else {
+    else
         printf("File: %s IO Error!", filename);
-    }
     close(fd_out);
 }
 
