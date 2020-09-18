@@ -15,7 +15,7 @@ int main() {
             break;
         }
         cmd = mparse(line);
-        valid = mexecute(line,cmd);
+        valid = mexec(cmd);
     }
     free(line);
     free(cmd);
