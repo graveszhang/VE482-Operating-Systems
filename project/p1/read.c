@@ -3,6 +3,7 @@
 //
 
 #include "read.h"
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -22,7 +23,6 @@ char * mread() {
     }
 
     while ((c = getchar()) != EOF) {
-
         if (c == '\n') {
             buffer[i] = '\0';
             return buffer;

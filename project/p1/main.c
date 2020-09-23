@@ -10,8 +10,16 @@ int main() {
     char* line;
     char** cmd;
     int flag = 0;
+    int pipe = 0; // without pipe
+
     while (valid){
         line = mread();
+
+        if(strstr(line,"|")) // execute_pipe
+            pipe = 1;
+        else
+            pipe = 0;
+
         if (strcmp(line,"exit") == 0){
             flag = 1;
             printf("exit\n");
@@ -19,14 +27,12 @@ int main() {
             break;
         }
         cmd = mparse(line);
-
-//        for (int i = 0; i < 4; i++)
-//            printf("cmd[%d] is %s\n", i, cmd[i]);
-
-        valid = mexec(cmd);
+        valid = mexec(cmd,pipe);
         free(line);
         free(cmd);
     }
-    if (flag) free(line);
+
+    if (flag)
+        free(line);
     return 0;
 }

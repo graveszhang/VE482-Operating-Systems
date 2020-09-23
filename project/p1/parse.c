@@ -10,7 +10,7 @@ char ** mparse(char *line) {
     char **cmd = malloc(buffersize * sizeof(char *));
     char **cmd_backup;
 
-    // Add space in line around >, <, >>
+    // Add space in line around >, <, >>, |
     char *goodline = malloc(sizeof(char) * 1024);
     int i = 0, j = 0;
     while (line[i] != '\0') {
@@ -28,6 +28,14 @@ char ** mparse(char *line) {
                 j++;
             }
             while (line[i] == '>') goodline[j++] = line[i++];
+            goodline[j++] = ' ';
+            continue;
+        } else if (line[i] == '|') {
+            if (i > 0 && line[i - 1] != ' ') {
+                goodline[j] = ' ';
+                j++;
+            }
+            while (line[i] == '|') goodline[j++] = line[i++];
             goodline[j++] = ' ';
             continue;
         } else {

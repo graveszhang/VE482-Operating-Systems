@@ -6,6 +6,22 @@
 
 #IncludeRegexTransform: 
 
+/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.c
+execute.h
+/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.h
+redirect.h
+/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/redirect.h
+sys/wait.h
+-
+stdio.h
+-
+string.h
+-
+stdlib.h
+-
+unistd.h
+-
+
 /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.h
 
 /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/main.c
@@ -22,23 +38,25 @@ parse.h
 execute.h
 /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/execute.h
 
-/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/parse.c
-string.h
--
-stdlib.h
--
-parse.h
 /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/parse.h
 
-/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/parse.h
-
-/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/read.c
-read.h
 /Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/read.h
+
+/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/redirect.h
 stdio.h
 -
 stdlib.h
 -
-
-/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/read.h
+stdbool.h
+-
+string.h
+/Users/gravescn/Desktop/GS/Coding Projects/VE482-Intro-to-Operating-Systems/project/p1/string.h
+unistd.h
+-
+sys/types.h
+-
+sys/stat.h
+-
+fcntl.h
+-
 
