@@ -32,10 +32,11 @@ int mexec_single(char **cmd) {
         redirection(cmd);
         if (strcmp(cmd[0], "pwd") == 0) {
             builtin_pwd(cmd);
+            free(cmd);
             exit(0);
         } else if (strcmp(cmd[0], "cd") == 0) {
             builtin_cd(cmd);
-            exit(0);
+            // bug： 加了exit(0)没法换目录，不加exit(0)没法退出。
         } else {
             if (execvp(cmd[0], cmd) < 0) {
                 printf("Cannot execute \"%s\"!\n", cmd[0]);

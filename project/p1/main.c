@@ -24,7 +24,7 @@ int main() {
             flag = 1;
             printf("exit\n");
             fflush(stdout);
-            break;
+            exit(0);
         }
         cmd = mparse(line);
         valid = mexec(cmd,pipe);
