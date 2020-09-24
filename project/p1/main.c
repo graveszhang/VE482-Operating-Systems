@@ -7,27 +7,31 @@
 
 int main() {
     int valid = 1;
-    char* line;
-    char** cmd;
+    char *line;
+    char **cmd;
     int flag = 0;
     int pipe = 0; // without pipe
 
-    while (valid){
+    while (valid) {
         line = mread();
 
-        if(strstr(line,"|")) // execute_pipe
+        if (strstr(line, "|")) // execute_pipe
             pipe = 1;
         else
             pipe = 0;
 
-        if (strcmp(line,"exit") == 0){
+        if (strcmp(line, "exit") == 0) {
             flag = 1;
             printf("exit\n");
             fflush(stdout);
             exit(0);
         }
         cmd = mparse(line);
-        valid = mexec(cmd,pipe);
+        if (strcmp(cmd[0], "cd") == 0) {
+            builtin_cd(cmd);
+        }
+
+        valid = mexec(cmd, pipe);
         free(line);
         free(cmd);
     }

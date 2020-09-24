@@ -28,15 +28,12 @@ int mexec_single(char **cmd) {
         printf("Failed to fork.\n");
         fflush(stdout);
         return 1;
-    } else if (pid == 0) {
+    } else if (pid == 0) { // child process
         redirection(cmd);
         if (strcmp(cmd[0], "pwd") == 0) {
             builtin_pwd(cmd);
             free(cmd);
             exit(0);
-        } else if (strcmp(cmd[0], "cd") == 0) {
-            builtin_cd(cmd);
-            // bug： 加了exit(0)没法换目录，不加exit(0)没法退出。
         } else {
             if (execvp(cmd[0], cmd) < 0) {
                 printf("Cannot execute \"%s\"!\n", cmd[0]);
