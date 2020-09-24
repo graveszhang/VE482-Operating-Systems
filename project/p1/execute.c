@@ -10,22 +10,33 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int mexec(char **cmd, int pipe) {
+int mexec(char **cmd, int pipe, int cmdnums) {
     if (cmd[0] == NULL) return 1;
-
-    if(pipe) {
-        int pipein = dup(STDIN_FILENO);
-        int pipeout = dup(STDOUT_FILENO);
-        mexec_pipe(cmd);
-        dup2(pipein, STDIN_FILENO);
-        dup2(pipeout, STDOUT_FILENO);
+    pid_t pid = fork();
+    if (pid == -1) {
+        printf("Failed to fork.\n");
+        fflush(stdout);
+        return 1;
     }
-    else
-        mexec_single(cmd);
+    else if (pid == 0) {
+        if (pipe) {
+            int pipein = dup(STDIN_FILENO);
+            int pipeout = dup(STDOUT_FILENO);
+            return mexec_pipe(cmd, 0, cmdnums);
+            dup2(pipein, STDIN_FILENO);
+            dup2(pipeout, STDOUT_FILENO);
+        } else {
+            return mexec_single(cmd, 0, cmdnums);
+        }
+    } else {
+        int status;
+        waitpid(pid, &status, 0);
+    }
     return 1;
 }
 
-int mexec_single(char **cmd) {
+int mexec_single(char **cmd, int left, int right) {
+    int end = right;
     int status;
     pid_t pid;
     pid = fork();
@@ -40,7 +51,11 @@ int mexec_single(char **cmd) {
             free(cmd);
             exit(0);
         } else {
-            if (execvp(cmd[0], cmd) < 0) {
+            char * cm[1024]; // duplicate for cmd
+            for (int i = left;i<end;++i)
+                cm[i] = cmd[i];
+            cm[end]=NULL;
+            if (execvp(cm[left], cm+left) < 0) {
                 printf("Cannot execute \"%s\"!\n", cmd[0]);
                 fflush(stdout);
                 exit(0);
@@ -52,32 +67,60 @@ int mexec_single(char **cmd) {
     return 1;
 }
 
-int mexec_pipe(char **cmd) {
+int mexec_pipe(char **cmd, int left, int right) {
+    int pipeidx = -1;
+    for (int i = left; i < right; ++i) {
+        if (!strcmp(cmd[i], "|")) {
+            pipeidx = i;
+            break;
+        }
+    }
 
+    if (pipeidx == right - 1) {
+        printf(stderr, "Error: Miss pipe parameters.\n");
+    }
 
-    int pipefd[2];     // [0] read end, [1] write end
+    int fds[2];     // [0] read end, [1] write end
 
-    if (pipe(pipefd) == -1) {
+    if (pipe(fds) == -1) {
         perror("pipe error");
         exit(EXIT_FAILURE);
     }
-    int pid;
 
-    pid = fork();
-    if (pid == -1)
-        perror("fork");
-    if (pid == 0) {
-        close(STDOUT_FILENO);
-        dup(pipefd[1]);
-        mexec_single(cmd);// this should be left
-    } else {
-        close(STDIN_FILENO);
-        dup(pipefd[0]);
-        close(pipefd[1]);
-        mexec_single(cmd); // this should be right
+    pid_t pid = vfork();
+    if (pid == -1) {
+        printf("Failed to fork.\n");
+        fflush(stdout);
+        return 1;
+    } else if (pid == 0) { // child process
+        close(fds[0]);
+        dup2(fds[1], STDIN_FILENO);
+        close(fds[1]);
+
+        return mexec_single(cmd, left, pipeidx);
+    } else { // parent process
+        int status;
+        waitpid(pid, &status, 0);
+        int exitCode = WEXITSTATUS(status);
+
+        if (exitCode != 0) { // chile process error
+            char info[4096] = {0};
+            char line[2048];
+            close(fds[1]);
+            dup2(fds[0], STDIN_FILENO);
+            close(fds[0]);
+            while (fgets(line, 2048, stdin) != NULL) { // read error message from child process
+                strcat(info, line);
+            }
+            printf("%s", info); // print error
+
+        } else if (pipeidx + 1 < right) {
+            close(fds[1]);
+            dup2(fds[0], STDIN_FILENO);
+            close(fds[0]);
+            return mexec_single(cmd, pipeidx + 1, right);
+        }
     }
-
-
     return 1;
 }
 

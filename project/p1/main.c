@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
+#include <unistd.h>
 #include "read.h"
 #include "parse.h"
 #include "execute.h"
@@ -24,7 +26,6 @@ int main() {
         if (strcmp(line, "exit") == 0) {
             flag = 1;
             printf("exit\n");
-            fflush(stdout);
             exit(0);
         }
         cmd = mparse(line);
@@ -33,8 +34,9 @@ int main() {
         if (cmdnums) {
             if (strcmp(cmd[0], "cd") == 0) {
                 builtin_cd(cmd, cmdnums);
+            } else {
+                valid = mexec(cmd, pipe, cmdnums);
             }
-            valid = mexec(cmd, pipe);
             free(line);
             free(cmd);
         } else { // input nothing
