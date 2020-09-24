@@ -5,16 +5,17 @@
 #include "parse.h"
 #include "execute.h"
 
+int cmdnums = 0; // Global variable, denotes the number of commands
+
 int main() {
     int valid = 1;
     char *line;
     char **cmd;
     int flag = 0;
     int pipe = 0; // without pipe
-
     while (valid) {
+        cmdnums = 0;
         line = mread();
-
         if (strstr(line, "|")) // execute_pipe
             pipe = 1;
         else
@@ -27,13 +28,20 @@ int main() {
             exit(0);
         }
         cmd = mparse(line);
-        if (strcmp(cmd[0], "cd") == 0) {
-            builtin_cd(cmd);
+//        printf("Command number is: %d\n",cmdnums);
+//        Sometimes above DEBUG sentence will pause for 2-3 seconds for IDK reasons (maybe entangles with ofstream)
+        if (cmdnums) {
+            if (strcmp(cmd[0], "cd") == 0) {
+                builtin_cd(cmd, cmdnums);
+            }
+            valid = mexec(cmd, pipe);
+            free(line);
+            free(cmd);
+        } else { // input nothing
+            free(line);
+            free(cmd);
+            continue;
         }
-
-        valid = mexec(cmd, pipe);
-        free(line);
-        free(cmd);
     }
 
     if (flag)

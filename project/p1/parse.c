@@ -6,6 +6,7 @@
 #include "parse.h"
 char ** mparse(char *line) {
     const char delim[] = " \t\r\n\a";
+    extern int cmdnums;
     int buffersize = 64;
     char **cmd = malloc(buffersize * sizeof(char *));
     char **cmd_backup;
@@ -51,6 +52,7 @@ char ** mparse(char *line) {
     while (arg != NULL) {
         cmd[i] = arg;
         i += 1;
+        cmdnums += 1;
         if (i >= buffersize) {
             buffersize += 64;
             cmd_backup = cmd;

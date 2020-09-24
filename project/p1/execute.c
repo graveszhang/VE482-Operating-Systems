@@ -13,8 +13,13 @@
 int mexec(char **cmd, int pipe) {
     if (cmd[0] == NULL) return 1;
 
-    if(pipe)
+    if(pipe) {
+        int pipein = dup(STDIN_FILENO);
+        int pipeout = dup(STDOUT_FILENO);
         mexec_pipe(cmd);
+        dup2(pipein, STDIN_FILENO);
+        dup2(pipeout, STDOUT_FILENO);
+    }
     else
         mexec_single(cmd);
     return 1;
@@ -30,7 +35,7 @@ int mexec_single(char **cmd) {
         return 1;
     } else if (pid == 0) { // child process
         redirection(cmd);
-        if (strcmp(cmd[0], "pwd") == 0) {
+        if (strcmp(cmd[0], "pwd") == 0) { // built-in pwd execute in child
             builtin_pwd(cmd);
             free(cmd);
             exit(0);
@@ -42,14 +47,13 @@ int mexec_single(char **cmd) {
             }
         }
     } else {
-        wait(&status);
+        waitpid(pid,&status,0);
     }
     return 1;
 }
 
 int mexec_pipe(char **cmd) {
-    int pipein = dup(STDIN_FILENO);
-    int pipeout = dup(STDOUT_FILENO);
+
 
     int pipefd[2];     // [0] read end, [1] write end
 
@@ -73,8 +77,7 @@ int mexec_pipe(char **cmd) {
         mexec_single(cmd); // this should be right
     }
 
-    dup2(pipein, STDIN_FILENO);
-    dup2(pipeout, STDOUT_FILENO);
+
     return 1;
 }
 
@@ -88,9 +91,16 @@ void builtin_pwd(char **cmd){
     fflush(stdout);
 }
 
-void builtin_cd(char **cmd){
-    if (chdir(cmd[1]) < 0) {
-        fprintf(stderr, "Cannot change to directory \"%s\".\n", cmd[1]);
-        fflush(stdout);
+void builtin_cd(char **cmd, int cmdnums) {
+    if (cmdnums < 2) {
+        char *home = getenv("HOME");
+        chdir(home);
+    } else if (cmdnums > 2) {
+        fprintf(stderr, "Too many arguments for cd.\n");
+    } else {
+        if (chdir(cmd[1]) < 0) {
+            fprintf(stderr, "Cannot change to directory \"%s\".\n", cmd[1]);
+            fflush(stdout);
+        }
     }
 }
