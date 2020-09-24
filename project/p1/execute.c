@@ -19,20 +19,20 @@ int mexec(char **cmd, int pipe, int cmdnums) {
         return 1;
     }
     else if (pid == 0) {
-        if (pipe) {
-            int pipein = dup(STDIN_FILENO);
-            int pipeout = dup(STDOUT_FILENO);
-            return mexec_pipe(cmd, 0, cmdnums);
-            dup2(pipein, STDIN_FILENO);
-            dup2(pipeout, STDOUT_FILENO);
-        } else {
-            return mexec_single(cmd, 0, cmdnums);
-        }
+        int pipein = dup(STDIN_FILENO);
+        int pipeout = dup(STDOUT_FILENO);
+        mexec_pipe(cmd, 0, cmdnums);
+        dup2(pipein, STDIN_FILENO);
+        dup2(pipeout, STDOUT_FILENO);
+        exit(0);
+//        } else {
+//            return mexec_single(cmd, 0, cmdnums);
+//        }
     } else {
         int status;
         waitpid(pid, &status, 0);
+        return 1;
     }
-    return 1;
 }
 
 int mexec_single(char **cmd, int left, int right) {
@@ -80,6 +80,9 @@ int mexec_pipe(char **cmd, int left, int right) {
         printf(stderr, "Error: Miss pipe parameters.\n");
     }
 
+    if (pipeidx == -1)
+        return mexec_single(cmd, left, right);
+
     int fds[2];     // [0] read end, [1] write end
 
     if (pipe(fds) == -1) {
@@ -96,7 +99,6 @@ int mexec_pipe(char **cmd, int left, int right) {
         close(fds[0]);
         dup2(fds[1], STDIN_FILENO);
         close(fds[1]);
-
         return mexec_single(cmd, left, pipeidx);
     } else { // parent process
         int status;

@@ -15,7 +15,7 @@ int main() {
     char **cmd;
     int flag = 0;
     int pipe = 0; // without pipe
-    while (valid) {
+    while (1) {
         cmdnums = 0;
         line = mread();
         if (strstr(line, "|")) // execute_pipe
