@@ -8,122 +8,119 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <unistd.h>
 
-int mexec(char **cmd, int pipe, int cmdnums) {
-    if (cmd[0] == NULL) return 1;
-    pid_t pid = fork();
-    if (pid == -1) {
-        printf("Failed to fork.\n");
-        fflush(stdout);
+#define MAX_PIPE_NUM 128
+
+int mexec(char** cmd, int pipe, int cmdnums){
+    if (cmd[0] == NULL)
         return 1;
+
+    if (!pipe) {
+        mexec_single(cmd,cmdnums);
+        return 0;
     }
-    else if (pid == 0) {
-        int pipein = dup(STDIN_FILENO);
-        int pipeout = dup(STDOUT_FILENO);
-        mexec_pipe(cmd, 0, cmdnums);
-        dup2(pipein, STDIN_FILENO);
-        dup2(pipeout, STDOUT_FILENO);
-        exit(0);
-//        } else {
-//            return mexec_single(cmd, 0, cmdnums);
-//        }
-    } else {
-        int status;
-        waitpid(pid, &status, 0);
-        return 1;
+
+    int i = 0, j = 1;
+    int pipeIdx[MAX_PIPE_NUM];
+    memset(pipeIdx, '\0', MAX_PIPE_NUM);
+    pipeIdx[0] = -1;
+
+    while(cmd[i] != NULL){
+        if (strcmp(cmd[i], "|") == 0){
+            pipeIdx[j++] = i;
+        }
+        i++;
     }
+    pipeIdx[j] = i;
+
+    int din = dup(STDIN_FILENO);
+    int dout = dup(STDOUT_FILENO);
+
+    mexec_pipe(cmd, pipeIdx, j);
+
+    dup2(din, STDIN_FILENO);
+    dup2(dout, STDOUT_FILENO);
+    return 0;
 }
 
-int mexec_single(char **cmd, int left, int right) {
-    int end = right;
-    int status;
+int mexec_single(char** arg, int cmdnums) {
+    if (strcmp(arg[0], "cd") == 0) {
+        builtin_cd(arg, cmdnums);
+        return 0;
+    }
     pid_t pid;
     pid = fork();
-    if (pid == -1) {
-        printf("Failed to fork.\n");
-        fflush(stdout);
-        return 1;
-    } else if (pid == 0) { // child process
-        redirection(cmd);
-        if (strcmp(cmd[0], "pwd") == 0) { // built-in pwd execute in child
-            builtin_pwd(cmd);
-            free(cmd);
+    if (pid == 0) {
+        redirection(arg);
+        if (strcmp(arg[0], "pwd") == 0) {
+            builtin_pwd(arg);
             exit(0);
-        } else {
-            char * cm[1024]; // duplicate for cmd
-            for (int i = left;i<end;++i)
-                cm[i] = cmd[i];
-            cm[end]=NULL;
-            if (execvp(cm[left], cm+left) < 0) {
-                printf("Cannot execute \"%s\"!\n", cmd[0]);
+        }
+        if (execvp(arg[0], arg) < 0) {
+            printf("Error: Fail to execute %s\n", arg[0]);
+            fflush(stdout);
+            exit(0);
+        }
+    } else if (pid == -1) {
+        printf("Error: Child process creation was unsuccessful.");
+        return 1;
+    } else if (pid > 0) {
+        wait(NULL);
+        return 0;
+    }
+    return 0;
+}
+
+int mexec_pipe(char** cmd, int* pipeIdx, int cmdnums) {
+    int c = 0;
+    while (c < cmdnums) {
+        int j = 0;
+        char *cmdp[1024];
+        memset(cmdp, '\0', 1024);
+
+        for (int i = pipeIdx[c] + 1; i <= pipeIdx[c + 1] - 1; i++) {
+            cmdp[j++] = cmd[i];
+        }
+
+        int fds[2];
+
+        if (c != cmdnums - 1) {
+            if (pipe(fds) == -1) {
+                printf("Error: Failed to pipe.\n");
+                fflush(stdout);
+                return 1;
+            }
+        }
+        pid_t pid = fork();
+
+        if (pid == -1) {
+            printf("Error: Fail to fork");
+            fflush(stdout);
+            return 1;
+        } else if (pid == 0) { //child
+            if (c != cmdnums - 1) {
+                close(fds[0]);
+                dup2(fds[1], STDOUT_FILENO);
+                close(fds[1]);
+            }
+            redirection(cmdp);
+            if (execvp(cmdp[0], cmdp) < 0) {
+                printf("Error: Fail to execute %s\n", cmdp[0]);
                 fflush(stdout);
                 exit(0);
             }
-        }
-    } else {
-        waitpid(pid,&status,0);
-    }
-    return 1;
-}
-
-int mexec_pipe(char **cmd, int left, int right) {
-    int pipeidx = -1;
-    for (int i = left; i < right; ++i) {
-        if (!strcmp(cmd[i], "|")) {
-            pipeidx = i;
-            break;
-        }
-    }
-
-    if (pipeidx == right - 1) {
-        printf(stderr, "Error: Miss pipe parameters.\n");
-    }
-
-    if (pipeidx == -1)
-        return mexec_single(cmd, left, right);
-
-    int fds[2];     // [0] read end, [1] write end
-
-    if (pipe(fds) == -1) {
-        perror("pipe error");
-        exit(EXIT_FAILURE);
-    }
-
-    pid_t pid = vfork();
-    if (pid == -1) {
-        printf("Failed to fork.\n");
-        fflush(stdout);
-        return 1;
-    } else if (pid == 0) { // child process
-        close(fds[0]);
-        dup2(fds[1], STDIN_FILENO);
-        close(fds[1]);
-        return mexec_single(cmd, left, pipeidx);
-    } else { // parent process
-        int status;
-        waitpid(pid, &status, 0);
-        int exitCode = WEXITSTATUS(status);
-
-        if (exitCode != 0) { // chile process error
-            char info[4096] = {0};
-            char line[2048];
+        } else {
+            int status;
+            waitpid(pid, &status, 0);
             close(fds[1]);
             dup2(fds[0], STDIN_FILENO);
             close(fds[0]);
-            while (fgets(line, 2048, stdin) != NULL) { // read error message from child process
-                strcat(info, line);
-            }
-            printf("%s", info); // print error
-
-        } else if (pipeidx + 1 < right) {
-            close(fds[1]);
-            dup2(fds[0], STDIN_FILENO);
-            close(fds[0]);
-            return mexec_single(cmd, pipeidx + 1, right);
         }
+        c++;
     }
-    return 1;
+    return 0;
 }
 
 void builtin_pwd(char **cmd){
@@ -136,7 +133,7 @@ void builtin_pwd(char **cmd){
     fflush(stdout);
 }
 
-void builtin_cd(char **cmd, int cmdnums) {
+int builtin_cd(char **cmd, int cmdnums) {
     if (cmdnums < 2) {
         char *home = getenv("HOME");
         chdir(home);
@@ -149,3 +146,4 @@ void builtin_cd(char **cmd, int cmdnums) {
         }
     }
 }
+

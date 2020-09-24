@@ -10,10 +10,9 @@
 int cmdnums = 0; // Global variable, denotes the number of commands
 
 int main() {
-    int valid = 1;
+    int result = 1;
     char *line;
     char **cmd;
-    int flag = 0;
     int pipe = 0; // without pipe
     while (1) {
         cmdnums = 0;
@@ -24,10 +23,10 @@ int main() {
             pipe = 0;
 
         if (strcmp(line, "exit") == 0) {
-            flag = 1;
             printf("exit\n");
             exit(0);
         }
+
         cmd = mparse(line);
 //        printf("Command number is: %d\n",cmdnums);
 //        Sometimes above DEBUG sentence will pause for 2-3 seconds for IDK reasons (maybe entangles with ofstream)
@@ -35,7 +34,7 @@ int main() {
             if (strcmp(cmd[0], "cd") == 0) {
                 builtin_cd(cmd, cmdnums);
             } else {
-                valid = mexec(cmd, pipe, cmdnums);
+                result = mexec(cmd, pipe, cmdnums);
             }
             free(line);
             free(cmd);
@@ -46,7 +45,5 @@ int main() {
         }
     }
 
-    if (flag)
-        free(line);
     return 0;
 }
