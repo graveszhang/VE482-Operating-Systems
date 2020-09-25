@@ -11,8 +11,6 @@
 #include <signal.h>
 #include <unistd.h>
 
-#define MAX_PIPE_NUM 128
-
 int mexec(char** cmd, int pipe, int cmdnums){
     if (cmd[0] == NULL)
         return 1;
@@ -23,8 +21,8 @@ int mexec(char** cmd, int pipe, int cmdnums){
     }
 
     int i = 0, j = 1;
-    int pipeIdx[MAX_PIPE_NUM];
-    memset(pipeIdx, '\0', MAX_PIPE_NUM);
+    int pipeIdx[256];
+    memset(pipeIdx, '\0', 256);
     pipeIdx[0] = -1;
 
     while(cmd[i] != NULL){
@@ -45,21 +43,21 @@ int mexec(char** cmd, int pipe, int cmdnums){
     return 0;
 }
 
-int mexec_single(char** arg, int cmdnums) {
-    if (strcmp(arg[0], "cd") == 0) {
-        builtin_cd(arg, cmdnums);
+int mexec_single(char** cmd, int cmdnums) {
+    if (strcmp(cmd[0], "cd") == 0) {
+        builtin_cd(cmd, cmdnums);
         return 0;
     }
     pid_t pid;
     pid = fork();
     if (pid == 0) {
-        redirection(arg);
-        if (strcmp(arg[0], "pwd") == 0) {
-            builtin_pwd(arg);
+        redirection(cmd);
+        if (strcmp(cmd[0], "pwd") == 0) {
+            builtin_pwd(cmd);
             exit(0);
         }
-        if (execvp(arg[0], arg) < 0) {
-            printf("Error: Fail to execute %s\n", arg[0]);
+        if (execvp(cmd[0], cmd) < 0) {
+            printf("Error: Fail to execute %s\n", cmd[0]);
             fflush(stdout);
             exit(0);
         }
@@ -67,7 +65,9 @@ int mexec_single(char** arg, int cmdnums) {
         printf("Error: Child process creation was unsuccessful.");
         return 1;
     } else if (pid > 0) {
-        wait(NULL);
+        int status;
+        waitpid(pid, &status, 0);
+//        wait(NULL);
         return 0;
     }
     return 0;
@@ -99,7 +99,7 @@ int mexec_pipe(char** cmd, int* pipeIdx, int cmdnums) {
             printf("Error: Fail to fork");
             fflush(stdout);
             return 1;
-        } else if (pid == 0) { //child
+        } else if (pid == 0) {
             if (c != cmdnums - 1) {
                 close(fds[0]);
                 dup2(fds[1], STDOUT_FILENO);
@@ -124,6 +124,7 @@ int mexec_pipe(char** cmd, int* pipeIdx, int cmdnums) {
 }
 
 void builtin_pwd(char **cmd){
+//    printf("Congrats! You are using built-in pwd!\n");
     char dir[1024];
     if (getcwd(dir, sizeof(dir)) == NULL) {
         printf("Error in getting current directory.\n");
@@ -133,7 +134,8 @@ void builtin_pwd(char **cmd){
     fflush(stdout);
 }
 
-int builtin_cd(char **cmd, int cmdnums) {
+void builtin_cd(char **cmd, int cmdnums) {
+//    printf("Congrats! You are using built-in cd!\n");
     if (cmdnums < 2) {
         char *home = getenv("HOME");
         chdir(home);

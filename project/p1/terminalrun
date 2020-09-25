@@ -1,0 +1,1 @@
+make --build cmake-build-debug --target all && cd cmake-build-debug && ./p1 

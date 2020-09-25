@@ -26,7 +26,7 @@ void redirection(char **cmd){
 
 static void rout(char *filename){
     if (filename == NULL)
-        printf("Error! No file name found.\n");
+        fprintf(stderr, "%s: No such file or directory\n", filename);
     umask(0000);
     int fd_out = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
     if (fd_out > 0)
@@ -38,7 +38,7 @@ static void rout(char *filename){
 
 static void rin(char *filename) {
     if (filename == NULL)
-        printf("Error! No file name found.\n");
+        fprintf(stderr, "%s: No such file or directory\n", filename);
     int fd_in = open(filename, O_RDONLY);
     if (fd_in > 0)
         dup2(fd_in, 0);
@@ -49,7 +49,7 @@ static void rin(char *filename) {
 
 static void rapp(char *filename) {
     if (filename == NULL)
-        printf("Error! No file name found.\n");;
+        fprintf(stderr, "%s: No such file or directory\n", filename);
     umask(0000);
     int fd_out = open(filename, O_APPEND | O_CREAT | O_WRONLY, 0777);
     if (fd_out > 0)

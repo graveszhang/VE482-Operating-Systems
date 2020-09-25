@@ -11,7 +11,7 @@ char * mread() {
     printf("mumsh $ ");
     fflush(stdout);
 
-    int c;
+    char c;
     int i = 0;
     int buffersize = 1024;
 
@@ -22,10 +22,16 @@ char * mread() {
         exit(1);
     }
 
-    while ((c = getchar()) != EOF) {
-        if (c == '\n') {
-            buffer[i] = '\0';
-            return buffer;
+    while((c = (char)fgetc(stdin)) != '\n') {
+        if (c == EOF) {
+//            printf("DEBUGG:%s\n", buffer[0]);
+            if (buffer[0])
+                continue;
+            else {
+                printf("exit\n");
+                fflush(stdout);
+                exit(0);
+            }
         } else {
             buffer[i] = c;
         }
@@ -38,11 +44,12 @@ char * mread() {
             if (!buffer) {
                 buffer = buffer_backup;
                 exit(1);
-            } else{
+            } else {
                 buffer_backup = NULL;
             }
         }
     }
+    buffer[i] = '\0';
     return buffer;
 }
 
