@@ -9,6 +9,7 @@
 #include "execute.h"
 
 int cmdnums = 0; // Global variable, denotes the number of commands
+jmp_buf environment;
 
 enum {
     NONE_EXIST_PROGRAM,
@@ -28,16 +29,26 @@ void sigint_handler(int sig){ // handle ctrl-c
     printf("CTRL-C is disabled.\n");
     #endif
     printf("\n");
-//    siglongjmp(env, 2);
+    siglongjmp(environment, 2);
 }
 
 int main() {
+
+    int in = dup(STDIN_FILENO);
+    int out = dup(STDOUT_FILENO);
+
     int result = -1;
     char *line;
     char **cmd;
     int pipe = 0; // without pipe
-    signal(SIGINT,sigint_handler);
+    signal(SIGINT, sigint_handler);
 //    signal(SIGINT,SIG_DFL); // DFL directly exit the program
+
+    if (sigsetjmp(environment, 1) == 2) {
+        if (cmdnums) free(cmd);
+        dup2(in, STDIN_FILENO);
+        dup2(out, STDOUT_FILENO);
+    }
 
     while (1) {
         cmdnums = 0;
@@ -82,11 +93,11 @@ int main() {
             }
             free(line);
             free(cmd);
+
         } else { // input nothing
             free(line);
             free(cmd);
         }
     }
-
     return 0;
 }
