@@ -11,22 +11,22 @@
 #include <signal.h>
 #include <unistd.h>
 
-int mexec(char** cmd, int pipe, int cmdnums){
+int mexec(char** cmd, int pipe, int cmdnums) {
     if (cmd[0] == NULL)
         return 1;
 
     if (!pipe) {
-        mexec_single(cmd,cmdnums);
+        mexec_single(cmd, cmdnums);
         return 0;
     }
 
     int i = 0, j = 1;
-    int pipeIdx[256];
-    memset(pipeIdx, '\0', 256);
+    int pipeIdx[512];
+    memset(pipeIdx, '\0', 512);
     pipeIdx[0] = -1;
 
-    while(cmd[i] != NULL){
-        if (strcmp(cmd[i], "|") == 0){
+    while (cmd[i] != NULL) {
+        if (strcmp(cmd[i], "|") == 0) {
             pipeIdx[j++] = i;
         }
         i++;
@@ -36,7 +36,7 @@ int mexec(char** cmd, int pipe, int cmdnums){
     int din = dup(STDIN_FILENO);
     int dout = dup(STDOUT_FILENO);
 
-    mexec_pipe(cmd, pipeIdx, j);
+    mexec_pipe(cmd, pipeIdx, j, 0);
 
     dup2(din, STDIN_FILENO);
     dup2(dout, STDOUT_FILENO);
@@ -73,52 +73,56 @@ int mexec_single(char** cmd, int cmdnums) {
     return 0;
 }
 
-int mexec_pipe(char** cmd, int* pipeIdx, int cmdnums) {
-    int c = 0;
-    while (c < cmdnums) {
-        int j = 0;
-        char *cmdp[1024];
-        memset(cmdp, '\0', 1024);
+int mexec_pipe(char** cmd, int* pipeIdx, int cmdnums, int cnt) {
 
-        for (int i = pipeIdx[c] + 1; i <= pipeIdx[c + 1] - 1; i++) {
-            cmdp[j++] = cmd[i];
-        }
+    if (cnt == cmdnums) return 0;
 
-        int fds[2];
+    int j = 0;
+    char *cmdp[1024];
+    memset(cmdp, '\0', 1024);
 
-        if (c != cmdnums - 1) {
-            if (pipe(fds) == -1) {
-                printf("Error: Failed to pipe.\n");
-                fflush(stdout);
-                return 1;
-            }
-        }
-        pid_t pid = fork();
+    for (int i = pipeIdx[cnt] + 1; i <= pipeIdx[cnt + 1] - 1; i++) {
+        cmdp[j++] = cmd[i];
+    }
 
-        if (pid == -1) {
-            printf("Error: Fail to fork");
+    int fds[2];
+
+    if (cnt != cmdnums - 1) {
+        if (pipe(fds) == -1) {
+            printf("Error: Failed to pipe.\n");
             fflush(stdout);
             return 1;
-        } else if (pid == 0) {
-            if (c != cmdnums - 1) {
-                close(fds[0]);
-                dup2(fds[1], STDOUT_FILENO);
-                close(fds[1]);
-            }
-            redirection(cmdp);
-            if (execvp(cmdp[0], cmdp) < 0) {
-                printf("Error: Fail to execute %s\n", cmdp[0]);
-                fflush(stdout);
-                exit(0);
-            }
-        } else {
-            int status;
-            waitpid(pid, &status, 0);
+        }
+    }
+    pid_t pid = fork();
+
+    if (pid == -1) {
+        printf("Error: Fail to fork");
+        fflush(stdout);
+        return 1;
+    } else if (pid == 0) {
+        if (cnt != cmdnums - 1) {
+            close(fds[0]);
+            dup2(fds[1], STDOUT_FILENO);
+            close(fds[1]);
+        }
+        redirection(cmdp);
+        if (execvp(cmdp[0], cmdp) < 0) {
+            printf("Error: Fail to execute %s\n", cmdp[0]);
+            fflush(stdout);
+            exit(0);
+        }
+    } else {
+        int status;
+
+        if (cnt != cmdnums - 1) {
             close(fds[1]);
             dup2(fds[0], STDIN_FILENO);
             close(fds[0]);
         }
-        c++;
+        cnt += 1;
+        mexec_pipe(cmd, pipeIdx, cmdnums, cnt);
+        waitpid(pid, &status, 0);
     }
     return 0;
 }
