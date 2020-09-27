@@ -58,7 +58,7 @@ int main() {
         else
             pipe = 0;
 
-        if (strcmp(line, "exit") == 0) {
+        if (strcmp(line, "exit") == 0 && line[4] == '\0') {
             printf("exit\n");
             exit(0);
         }

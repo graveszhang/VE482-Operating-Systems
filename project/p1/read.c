@@ -21,9 +21,35 @@ char * mread() {
         free(buffer);
         exit(1);
     }
-
+//    while (1) {
+//        c = (char) getchar();
+//        if (c == EOF) {
+//            if (buffer[0])
+//                continue;
+//            else {
+//                printf("exit\n");
+//                fflush(stdout);
+//                return 0;
+//            }
+//        } else if (c == '\n'){
+//            break;
+//        } else {
+//            buffer[i] = c;
+//            i += 1;
+//        }
     while((c = (char)fgetc(stdin)) != '\n') {
-        if (c == EOF) {
+        if (i >= buffersize) {
+            buffersize += 1024;
+            char *buffer_backup = buffer;
+            buffer = realloc(buffer, buffersize);
+            if (!buffer) {
+                buffer = buffer_backup;
+                exit(1);
+            } else {
+                buffer_backup = NULL;
+            }
+        }
+        if (c == EOF || !c) { //c reads nothing
 //            printf("DEBUGG:%s\n", buffer[0]);
             if (buffer[0])
                 continue;
@@ -36,18 +62,6 @@ char * mread() {
             buffer[i] = c;
         }
         i += 1;
-
-        if (i >= buffersize) {
-            buffersize += 1024;
-            char *buffer_backup = buffer;
-            buffer = realloc(buffer, buffersize);
-            if (!buffer) {
-                buffer = buffer_backup;
-                exit(1);
-            } else {
-                buffer_backup = NULL;
-            }
-        }
     }
     buffer[i] = '\0';
     return buffer;
