@@ -38,7 +38,6 @@ int main() {
     int out = dup(STDOUT_FILENO);
 
     int result = -1;
-    char *line;
     char **cmd;
     int pipe = 0; // without pipe
     signal(SIGINT, sigint_handler);
@@ -51,16 +50,22 @@ int main() {
     }
 
     while (1) {
+        char line[1024];
         cmdnums = 0;
-        line = mread();
+        int flag = mread(line);
+        if (flag == -1) return 0;
+
+
         if (strstr(line, "|")) // execute_pipe
             pipe = 1;
         else
             pipe = 0;
-
+        if (strcmp(line,"\0")==0) {
+            continue;
+        }
         if (strcmp(line, "exit") == 0 && line[4] == '\0') {
             printf("exit\n");
-            exit(0);
+            return 0;
         }
 
         cmd = mparse(line);
@@ -91,11 +96,11 @@ int main() {
                         break;
                 }
             }
-            free(line);
+//            free(line);
             free(cmd);
 
         } else { // input nothing
-            free(line);
+//            free(line);
             free(cmd);
         }
     }

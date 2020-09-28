@@ -5,5 +5,5 @@
 #ifndef P1_READ_H
 #define P1_READ_H
 
-char * mread();
+int mread(char *line);
 #endif //P1_READ_H
