@@ -11,12 +11,18 @@
 #include <signal.h>
 #include <unistd.h>
 
-int mexec(char** cmd, int pipe, int cmdnums) {
+int mexec(char** cmd, int pipe, int cmdnums, Job* joblist, Job* job, int jobnums) {
     if (cmd[0] == NULL)
         return 1;
 
+    if (job->fb == Back){
+        joblist[jobnums] = *job;
+        job->pidnums = cmdnums + 1;
+    }
+
+
     if (!pipe) {
-        mexec_single(cmd, cmdnums);
+        mexec_single(cmd, cmdnums, joblist, job, jobnums);
         return 0;
     }
 
@@ -36,14 +42,14 @@ int mexec(char** cmd, int pipe, int cmdnums) {
     int din = dup(STDIN_FILENO);
     int dout = dup(STDOUT_FILENO);
 
-    mexec_pipe(cmd, pipeIdx, j, 0);
+    mexec_pipe(cmd, pipeIdx, j, 0, joblist, job, jobnums);
 
     dup2(din, STDIN_FILENO);
     dup2(dout, STDOUT_FILENO);
     return 0;
 }
 
-int mexec_single(char** cmd, int cmdnums) {
+int mexec_single(char** cmd, int cmdnums, Job* joblist, Job* job, int jobnums) {
     if (strcmp(cmd[0], "cd") == 0) {
         builtin_cd(cmd, cmdnums);
         return 0;
@@ -57,7 +63,8 @@ int mexec_single(char** cmd, int cmdnums) {
             exit(0);
         }
         if (execvp(cmd[0], cmd) < 0) {
-            printf("Error: Fail to execute %s\n", cmd[0]);
+//            printf("Error: Fail to execute %s\n", cmd[0]);
+            fprintf(stderr, "%s: command not found\n", cmd[0]);
             fflush(stdout);
             exit(0);
         }
@@ -65,16 +72,24 @@ int mexec_single(char** cmd, int cmdnums) {
         printf("Error: Child process creation was unsuccessful.");
         return 1;
     } else if (pid > 0) {
-        int status;
-        waitpid(pid, &status, 0);
-//        wait(NULL);
+        if (job->fb == Front) {
+            int status;
+            waitpid(pid, &status, 0);
+        } else if (job->fb == Back) {
+            job->pid[0] = pid;
+            job->pidnums = 1;
+            joblist[jobnums] = *job;
+        } else {
+            int status;
+            waitpid(pid, &status, WNOHANG|WUNTRACED);
+        }
+
         return 0;
     }
     return 0;
 }
 
-int mexec_pipe(char** cmd, int* pipeIdx, int cmdnums, int cnt) {
-
+int mexec_pipe(char** cmd, int* pipeIdx, int cmdnums, int cnt, Job* joblist, Job* job, int jobnums) {
     if (cnt == cmdnums) return 0;
 
     int j = 0;
@@ -108,12 +123,17 @@ int mexec_pipe(char** cmd, int* pipeIdx, int cmdnums, int cnt) {
         }
         redirection(cmdp);
         if (execvp(cmdp[0], cmdp) < 0) {
-            printf("Error: Fail to execute %s\n", cmdp[0]);
+//            printf("Error: Fail to execute %s\n", cmdp[0]);
+            fprintf(stderr, "%s: command not found\n", cmdp[0]);
             fflush(stdout);
             exit(0);
         }
     } else {
-        int status;
+        if (job->fb == Back) {
+            job->pid[cnt] = pid;
+            job->pidnums = 1;
+            joblist[jobnums] = *job;
+        }
 
         if (cnt != cmdnums - 1) {
             close(fds[1]);
@@ -121,8 +141,12 @@ int mexec_pipe(char** cmd, int* pipeIdx, int cmdnums, int cnt) {
             close(fds[0]);
         }
         cnt += 1;
-        mexec_pipe(cmd, pipeIdx, cmdnums, cnt);
-        waitpid(pid, &status, 0);
+        mexec_pipe(cmd, pipeIdx, cmdnums, cnt, joblist, job, jobnums);
+        if (job->fb == Front) {
+            int status;
+            waitpid(pid, &status, 0);
+        } else
+            waitpid(pid, &job->state[cnt], 0);
     }
     return 0;
 }
@@ -147,7 +171,8 @@ void builtin_cd(char **cmd, int cmdnums) {
         fprintf(stderr, "Too many arguments for cd.\n");
     } else {
         if (chdir(cmd[1]) < 0) {
-            fprintf(stderr, "Cannot change to directory \"%s\".\n", cmd[1]);
+            fflush(stdout);
+            fprintf(stderr, "%s: No such file or directory.\n", cmd[1]);
             fflush(stdout);
         }
     }

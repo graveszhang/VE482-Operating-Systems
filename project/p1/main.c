@@ -9,10 +9,11 @@
 #include "execute.h"
 
 int cmdnums = 0; // Global variable, denotes the number of commands
+int jobnums = 0; // Global variable, denotes the number of jobs
+
 jmp_buf environment;
 
 enum {
-    NONE_EXIST_PROGRAM,
     F_NOT_EXIST_IN,
     F_PERMISSION_DENIED_OUT,
     DUP_REDIRECTION_IN,
@@ -20,8 +21,7 @@ enum {
     SYNTAX_ERROR_IN,
     SYNTAX_ERROR_OUT,
     SYNTAX_ERROR_PIPE,
-    MISSING_PROGRAM,
-    NONE_EXIST_CD
+    MISSING_PROGRAM
 };
 
 void sigint_handler(int sig){ // handle ctrl-c
@@ -32,10 +32,57 @@ void sigint_handler(int sig){ // handle ctrl-c
     siglongjmp(environment, 2);
 }
 
-int main() {
+void initJob(Job *job){
+    int i = 0;
+    for (i = 0; i < PIPENUMS; ++i) {
+        job->pid[i] = 0;
+        job->state[i] = 0;
+    }
+    job->content[i] = '\0';
+    job->fb = Back; // back for default
+    job->id = 1;
+    job->pidnums = 0;
+}
 
+Bool JobIsRunning(Job job){
+    Bool Running = False;
+    for (int i = 0; i < job.pidnums; ++i){
+        int status;
+        if (!waitpid(job.pid[i],&status,WNOHANG)){
+            Running = True;
+            break;
+        } else{
+            job.state[i] = 1; // Still running
+        }
+    }
+    return Running;
+}
+
+void printJob(Job *joblist){
+    if (!jobnums)
+        return;
+    for (int i = 0; i < jobnums; ++i) {
+        printf("[%d] ",joblist[i].id);
+        fflush(stdout);
+        if (JobIsRunning(joblist[i])){
+            printf("running ");
+            fflush(stdout);
+        } else {
+            printf("done ");
+            fflush(stdout);
+        }
+        printf("%s\n", joblist[i].content);
+        fflush(stdout);
+    }
+}
+
+int main() {
     int in = dup(STDIN_FILENO);
     int out = dup(STDOUT_FILENO);
+
+    Job joblist[128];
+    for (int j = 0; j < 128; ++j)
+        initJob(&joblist[j]);
 
     int result = -1;
     char **cmd;
@@ -53,28 +100,64 @@ int main() {
         char line[1024];
         cmdnums = 0;
         int flag = mread(line);
-        if (flag == -1) return 0;
+        if (flag == -1)
+            return 0;
 
+        /********** Job Initialization **********/
+
+        Job job;
+        initJob(&job); // set for default values
+        job.id = jobnums + 1;
+
+        for (int k = 0; k < 1024; ++k)
+            job.content[k] = line[k]; // include the last &
+
+        if (strlen(line)) {
+            char last = line[strlen(line) - 1];
+            if (last == '&') {
+                job.fb = Back;
+                line[strlen(line) - 1] = '\n';
+                line[strlen(line)] = '\0';
+                printf("[%d] ", job.id);
+                fflush(stdout);
+                printf("%s \n", job.content);
+                fflush(stdout);
+            } else
+                job.fb = Front;
+        }
+//        printf("Debug: Job FB is %d\n",job.FB);
+//        printf("Debug: Job id is %d\n",job.id);
+
+        /********** Job Initialization **********/
 
         if (strstr(line, "|")) // execute_pipe
             pipe = 1;
         else
             pipe = 0;
-        if (strcmp(line,"\0")==0) {
+
+        if (strcmp(line, "\0") == 0) {
             continue;
         }
+
         if (strcmp(line, "exit") == 0 && line[4] == '\0') {
             printf("exit\n");
             return 0;
         }
-
+        if (strcmp(line, "jobs") == 0 && line[4] == '\0') {
+            printJob(joblist);
+            continue;
+        }
         cmd = mparse(line);
-//        printf("Command number is: %d\n",cmdnums);
         if (cmdnums) {
             if (strcmp(cmd[0], "cd") == 0) {
                 builtin_cd(cmd, cmdnums);
             } else {
-                result = mexec(cmd, pipe, cmdnums);
+                result = mexec(cmd, pipe, cmdnums,joblist,&job,jobnums);
+                if (job.fb == Back) {
+                    joblist[jobnums] = job;
+                    jobnums += 1;
+                    jobnums %= 128;
+                }
                 switch (result) { // ERROR HANDLING 4,5,6,7
                     case DUP_REDIRECTION_IN:
                         fprintf(stderr, "error: duplicated input redirection\n");
@@ -96,11 +179,9 @@ int main() {
                         break;
                 }
             }
-//            free(line);
             free(cmd);
 
         } else { // input nothing
-//            free(line);
             free(cmd);
         }
     }
