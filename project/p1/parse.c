@@ -1,10 +1,21 @@
 //
 // Created by Graves Zhang on 9/14/20.
 //
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "parse.h"
-char ** mparse(char *line) {
+
+typedef enum Error{
+    Append,
+    Out,
+    In,
+    Pipe,
+    Empty,
+    File
+} Err;
+
+char ** mparse(char *line, Bool *err) {
     const char delim[] = " \t\r\n\a";
     extern int cmdnums;
     int buffersize = 64;
@@ -46,6 +57,74 @@ char ** mparse(char *line) {
     goodline[j] = '\0';
     strcpy(line, goodline);
     free(goodline);
+
+//    printf("DEBUG: line is %s\n",line);
+//    Add space among words
+
+    Err flag = Empty;
+    Bool haveIn = False;
+    Bool haveOut = False;
+    Bool haveFile = False;
+
+    for (int k = 0; k < strlen(line); ++k) {
+        if (line[k] == ' ' || line[k] == '\t' || line[k] == '\r' || line[k] == '\n' || line[k] == '\a')
+            continue;
+
+        if (flag == Pipe && line[k] == '|') {
+            fprintf(stderr, "error: missing program\n");
+            fflush(stdout);
+            *err = True;
+            break;
+        } else if ((flag == Out || flag == In || flag == Pipe) && line[k] == '>') {
+            fprintf(stderr, "syntax error near unexpected token `%c\'\n", '>');
+            fflush(stdout);
+            *err = True;
+            break;
+        } else if ((flag == Out || flag == In || flag == Pipe) && line[k] == '<') {
+            fprintf(stderr, "syntax error near unexpected token `%c\'\n", '<');
+            fflush(stdout);
+            *err = True;
+            break;
+        } else if ((flag == Out || flag == In) && line[k] == '|') {
+            fprintf(stderr, "syntax error near unexpected token `%c\'\n", '|');
+            fflush(stdout);
+            *err = True;
+            break;
+        } else if (haveFile == True && haveIn == True && line[k] == '<') {
+            fprintf(stderr, "error: duplicated input redirection\n");
+            fflush(stdout);
+            *err = True;
+            break;
+        } else if (haveFile == True && haveOut == True && (line[k] == '>' || line[k] == '|')) {
+            fprintf(stderr, "error: duplicated output redirection\n");
+            fflush(stdout);
+            *err = True;
+            break;
+        }
+
+        if (line[k] == '|') {
+            flag = Pipe;
+            haveIn = True;
+        } else if (line[k] == '>') {
+            if (k < strlen(line) - 1) {
+                if (line[k + 1] == '>')
+                    flag = Append;
+                else {
+                    flag = Out;
+                    haveOut = True;
+                }
+            } else {
+                flag = Out;
+                haveOut = True;
+            }
+        } else if (line[k] == '<') {
+            flag = In;
+            haveIn = True;
+        } else {
+            flag = File;
+            haveFile = True;
+        }
+    }
 
     char *arg = strtok(line, delim);
     i = 0;

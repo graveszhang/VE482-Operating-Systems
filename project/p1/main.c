@@ -15,7 +15,6 @@ jmp_buf environment;
 
 enum {
     F_NOT_EXIST_IN,
-    F_PERMISSION_DENIED_OUT,
     DUP_REDIRECTION_IN,
     DUP_REDIRECTION_OUT,
     SYNTAX_ERROR_IN,
@@ -130,10 +129,8 @@ int main() {
 
         /********** Job Initialization **********/
 
-        if (strstr(line, "|")) // execute_pipe
-            pipe = 1;
-        else
-            pipe = 0;
+        if (strstr(line, "|")) pipe = 1;
+        else pipe = 0;
 
         if (strcmp(line, "\0") == 0) {
             continue;
@@ -147,7 +144,12 @@ int main() {
             printJob(joblist);
             continue;
         }
-        cmd = mparse(line);
+
+        Bool Errparse = False;
+        cmd = mparse(line, &Errparse);
+        if (Errparse == True)
+            continue;
+
         if (cmdnums) {
             if (strcmp(cmd[0], "cd") == 0) {
                 builtin_cd(cmd, cmdnums);
@@ -158,7 +160,7 @@ int main() {
                     jobnums += 1;
                     jobnums %= 128;
                 }
-                switch (result) { // ERROR HANDLING 4,5,6,7
+                switch (result) {
                     case DUP_REDIRECTION_IN:
                         fprintf(stderr, "error: duplicated input redirection\n");
                         break;

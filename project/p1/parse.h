@@ -4,5 +4,6 @@
 
 #ifndef P1_PARSE_H
 #define P1_PARSE_H
-char ** mparse(char *line);
+#include "execute.h"
+char ** mparse(char *line, Bool *err);
 #endif //P1_PARSE_H

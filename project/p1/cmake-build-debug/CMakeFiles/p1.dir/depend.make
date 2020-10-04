@@ -10,6 +10,7 @@ CMakeFiles/p1.dir/main.c.o: ../main.c
 CMakeFiles/p1.dir/main.c.o: ../parse.h
 CMakeFiles/p1.dir/main.c.o: ../read.h
 
+CMakeFiles/p1.dir/parse.c.o: ../execute.h
 CMakeFiles/p1.dir/parse.c.o: ../parse.c
 CMakeFiles/p1.dir/parse.c.o: ../parse.h
 
