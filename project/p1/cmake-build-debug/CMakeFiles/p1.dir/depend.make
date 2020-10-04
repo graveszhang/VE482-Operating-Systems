@@ -14,6 +14,8 @@ CMakeFiles/p1.dir/parse.c.o: ../execute.h
 CMakeFiles/p1.dir/parse.c.o: ../parse.c
 CMakeFiles/p1.dir/parse.c.o: ../parse.h
 
+CMakeFiles/p1.dir/read.c.o: ../execute.h
+CMakeFiles/p1.dir/read.c.o: ../parse.h
 CMakeFiles/p1.dir/read.c.o: ../read.c
 CMakeFiles/p1.dir/read.c.o: ../read.h
 
