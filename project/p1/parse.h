@@ -5,5 +5,7 @@
 #ifndef P1_PARSE_H
 #define P1_PARSE_H
 #include "execute.h"
-char ** mparse(char *line, Bool *err);
+char ** mparse(char **cmd, char *line, Bool *err, char *qline, char **qcmd);
+void qparse(char* qlines, char* line, int len);
+
 #endif //P1_PARSE_H

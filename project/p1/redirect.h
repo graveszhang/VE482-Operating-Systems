@@ -14,7 +14,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-void redirection(char **cmd);
+void redirection(char **cmd, char **qcmd);
 static void rout(char *filename);
 static void rin(char *filename);
 static void rapp(char *filename);

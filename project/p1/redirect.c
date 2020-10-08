@@ -4,9 +4,40 @@
 
 #include "redirect.h"
 
-void redirection(char **cmd){
+void redirection(char **cmd, char **qcmd) {
+    int numin = 0;
+    int numout = 0;
     int i = 0;
     while (cmd[i] != NULL) {
+        if (strcmp(qcmd[i], "1") == 0 || strcmp(qcmd[i], "11") == 0) {
+            i += 1;
+            continue;
+        }
+        if (strcmp(cmd[i], "<") == 0) numin += 1;
+        else if (strcmp(cmd[i], ">") == 0 || strcmp(cmd[i], ">>") == 0) {
+            numout += 1;
+        }
+        i++;
+    }
+    if (numout > 1) {
+        fprintf(stderr, "error: duplicated output redirection\n");
+        fflush(stdout);
+        exit(1);
+    }
+    if (numin > 1) {
+        fprintf(stderr, "error: duplicated input redirection\n");
+        fflush(stdout);
+        exit(1);
+    }
+    if (numout == 0 && numin == 0)
+        return;
+
+    i = 0;
+    while (cmd[i] != NULL) {
+        if (strcmp(qcmd[i], "1") == 0 || strcmp(qcmd[i], "11") == 0) {
+            i++;
+            continue;
+        }
         if (strcmp(cmd[i], ">") == 0) {
             rout(cmd[i + 1]);
             rnxt(cmd, i);
@@ -23,6 +54,7 @@ void redirection(char **cmd){
         i++;
     }
 }
+
 
 static void rout(char *filename){
     if (filename == NULL)

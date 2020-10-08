@@ -27,10 +27,11 @@ typedef enum _bool{
     True = 1
 } Bool;
 
-int mexec(char **cmd, int pipe, int cmdnums, Job* joblist, Job* job, int jobnums);
-int mexec_pipe(char** cmd, int* pipeIdx, int cmdnums, int cnt, Job* joblist, Job* job, int jobnums);
-int mexec_single(char** cmd, int cmdnums, Job* joblist, Job* job, int jobnums);
+int mexec(char** cmd, int cmdnums, int pipe, Job* job, Job* joblist, int jobnums, pid_t mainpid, char** qcmd);
+int mexec_pipe(char** cmd, int* pipeidx, int cmnum, int cnt, Job* job, Job* joblist, int jobnums, pid_t mainpid, char** qcmd);
+int mexec_single(char** cmd, Job* job, Job* joblist, int jobnums, pid_t mainpid, int cmdnums, char** qcmd);
 void builtin_cd(char** cmd, int cmdnums);
 void builtin_pwd(char **cmd);
+
 
 #endif //P1_EXECUTE_H

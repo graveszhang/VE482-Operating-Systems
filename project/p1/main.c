@@ -10,7 +10,7 @@
 
 int cmdnums = 0; // Global variable, denotes the number of commands
 int jobnums = 0; // Global variable, denotes the number of jobs
-
+pid_t mainpid;
 jmp_buf environment;
 
 enum {
@@ -35,7 +35,7 @@ void initJob(Job *job){
     int i = 0;
     for (i = 0; i < PIPENUMS; ++i) {
         job->pid[i] = 0;
-        job->state[i] = 0;
+        job->state[i] = -1;
     }
     job->content[i] = '\0';
     job->fb = Back; // back for default
@@ -43,6 +43,11 @@ void initJob(Job *job){
     job->pidnums = 0;
 }
 
+void initJobList(Job *joblist){
+    for (int i = 0; i < 128; i++){
+        initJob(&(joblist[i]));
+    }
+}
 Bool JobIsRunning(Job job){
     Bool Running = False;
     for (int i = 0; i < job.pidnums; ++i){
@@ -57,7 +62,7 @@ Bool JobIsRunning(Job job){
     return Running;
 }
 
-void printJob(Job *joblist){
+void printJob(Job *joblist,int jobnums){
     if (!jobnums)
         return;
     for (int i = 0; i < jobnums; ++i) {
@@ -65,11 +70,10 @@ void printJob(Job *joblist){
         fflush(stdout);
         if (JobIsRunning(joblist[i])){
             printf("running ");
-            fflush(stdout);
         } else {
             printf("done ");
-            fflush(stdout);
         }
+        fflush(stdout);
         printf("%s\n", joblist[i].content);
         fflush(stdout);
     }
@@ -78,83 +82,136 @@ void printJob(Job *joblist){
 int main() {
     int in = dup(STDIN_FILENO);
     int out = dup(STDOUT_FILENO);
-
-    Job joblist[128];
-    for (int j = 0; j < 128; ++j)
-        initJob(&joblist[j]);
-
+    int idx;
+    int pipe; // without pipe
     int result = -1;
-    char **cmd;
-    int pipe = 0; // without pipe
+    char c;
+    char *cmd[1024];
+    char line[1024];
+    char goodline[1024];
+    char *qcmd[1024];
+    Bool rdc;
+    Bool qdc;
+    Job joblist[128];
+    initJobList(joblist);
+    mainpid = getpid();
+    setpgid(0, 0);
     signal(SIGINT, sigint_handler);
 //    signal(SIGINT,SIG_DFL); // DFL directly exit the program
 
     if (sigsetjmp(environment, 1) == 2) {
-        if (cmdnums) free(cmd);
         dup2(in, STDIN_FILENO);
         dup2(out, STDOUT_FILENO);
     }
 
     while (1) {
-        char line[1024];
+        memset(cmd, '\0', 1024);
+        memset(line, '\0', 1024);
+        memset(goodline, '\0', 1024);
+        memset(qcmd, '\0', 1024);
+
+        rdc = 0;
+        qdc = 0;
+        idx = 0;
+        pipe = 0;
         cmdnums = 0;
-        int flag = mread(line);
-        if (flag == -1)
-            return 0;
 
-        /********** Job Initialization **********/
+        printf("mumsh $ ");
+        fflush(stdout);
 
-        Job job;
-        initJob(&job); // set for default values
-        job.id = jobnums + 1;
+        while(1) {
+            c = (char) fgetc(stdin);
+            if (idx >= 1024) break;
 
-        for (int k = 0; k < 1024; ++k)
-            job.content[k] = line[k]; // include the last &
+            if (c == '\n') {
+                if (idx == 0) {
+                    printf("mumsh $ ");
+                    continue;
+                }
+                rdc = Redirection_Complete(line, idx);
+                qdc = Quotation_Complete(line);
 
-        if (strlen(line)) {
-            char last = line[strlen(line) - 1];
-            if (last == '&') {
-                job.fb = Back;
-                line[strlen(line) - 1] = '\n';
-                line[strlen(line)] = '\0';
-                printf("[%d] ", job.id);
-                fflush(stdout);
-                printf("%s \n", job.content);
-                fflush(stdout);
-            } else
-                job.fb = Front;
+                if (rdc == -1) break;
+                if (qdc == True && rdc == True) {
+                    qparse(goodline, line, idx);
+                    break;
+                } else if (qdc == False) {
+                    line[idx++] = '\n';
+                    printf("> ");
+                    fflush(stdout);
+                    continue;
+                } else if (rdc == False) {
+                    printf("> ");
+                    fflush(stdout);
+                    continue;
+                }
+            } else if (c == EOF) {
+                if (line[0] != '\0') {
+                    fflush(stdin);
+                    continue;
+                } else {
+                    printf("exit\n");
+                    fflush(stdout);
+                    return 0;
+                }
+            } else line[idx] = c;
+            idx++;
         }
-//        printf("Debug: Job FB is %d\n",job.FB);
-//        printf("Debug: Job id is %d\n",job.id);
-
-        /********** Job Initialization **********/
-
-        if (strstr(line, "|")) pipe = 1;
-        else pipe = 0;
-
-        if (strcmp(line, "\0") == 0) {
+        if (rdc == -1)
             continue;
-        }
+        if(line[0] == '\n') continue;
 
-        if (strcmp(line, "exit") == 0 && line[4] == '\0') {
+        if (strcmp(line, "exit") == 0 && line[4] == '\0'){
             printf("exit\n");
             return 0;
         }
-        if (strcmp(line, "jobs") == 0 && line[4] == '\0') {
-            printJob(joblist);
-            continue;
+
+        int id = 0;
+        while(id < 1024 && line[id]){
+            if (goodline[id] == '1'){
+                id++;
+                continue;
+            }
+            if (line[id] == '|'){
+                pipe = 1;
+                break;
+            }
+            id++;
         }
 
+        if (strcmp(line, "jobs") == 0 && line[4] == '\0'){
+            printJob(joblist,jobnums);
+            continue;
+        }
+        Job job;
+        initJob(&job);
+        for (int i = 0; i < 1024; i++){
+            job.content[i] = line[i];
+        }
+        job.id = jobnums + 1;
+        if (line[idx - 1] == '&'){
+            line[idx - 1] = '\0';
+            job.fb = Back;
+            printf("[%d] ", job.id);
+            fflush(stdout);
+            printf(" %s\n", job.content);
+            fflush(stdout);
+        }
+        else job.fb = Front;
+        job.pidnums = 0;
+//        printf("Debug: Job FB is %d\n",job.FB);
+//        printf("Debug: Job id is %d\n",job.id);
+
         Bool Errparse = False;
-        cmd = mparse(line, &Errparse);
+        mparse(cmd, line, &Errparse, goodline, qcmd);
         if (Errparse == True)
             continue;
 
         if (cmdnums) {
-            if (strcmp(cmd[0], "cd") == 0) {
-                builtin_cd(cmd, cmdnums);
+            if (pipe == 0 && strcmp(cmd[0], "cd") == 0) {
+                builtin_cd(cmd,cmdnums);
             } else {
-                result = mexec(cmd, pipe, cmdnums,joblist,&job,jobnums);
+                result = mexec(cmd, cmdnums, pipe, &job, joblist, jobnums, mainpid, qcmd);
                 if (job.fb == Back) {
                     joblist[jobnums] = job;
                     jobnums += 1;
@@ -181,11 +238,6 @@ int main() {
                         break;
                 }
             }
-            free(cmd);
-
-        } else { // input nothing
-            free(cmd);
         }
     }
-    return 0;
 }
