@@ -8,8 +8,11 @@
 #include "execute.h"
 
 int mread(char *line, char *goodline);
+
 Bool Redirection_Complete(char *line, int pos);
+
 Bool Quotation_Complete(char* line);
+
 typedef struct _stack {
     char container[16]; // for quote pairs
     int size;
