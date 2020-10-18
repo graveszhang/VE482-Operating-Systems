@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+D:/VE482/h3/linkedlist.h
+stdio.h
+-
+
+D:/VE482/h3/main.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+time.h
+-
+assert.h
+-
+linkedlist.h
+D:/VE482/h3/linkedlist.h
+
