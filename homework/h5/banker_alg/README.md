@@ -29,7 +29,7 @@ To demo its function, I created a sample input as is store in ```input```,  it h
 ```bash
 ### First two line denotes basic information
 4     	<- number of process
-3				<- number of resource
+3		<- number of resource
 
 ### This is for process 1 initialization
 3 2 2   <- max resouces for process 1
