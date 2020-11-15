@@ -389,7 +389,13 @@ ssize_t dadfs_write(struct kiocb *kiocb, struct iov_iter *from)
 	handle = jbd2_journal_start(sfs_sb->journal, 1);
 	if (IS_ERR(handle))
 		return PTR_ERR(handle);
-	retval = generic_write_checks(filp, ppos, &len, 0);
+	
+	#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 18, 0)
+		retval = generic_write_checks(kiocb, from);
+	#else
+		retval = generic_write_checks(filp, ppos, &len, 0);
+	#endif
+
 	if (retval)
 		return retval;
 
