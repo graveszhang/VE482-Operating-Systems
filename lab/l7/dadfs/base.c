@@ -269,13 +269,21 @@ struct dadfs_inode *dadfs_get_inode(struct super_block *sb,
 	return inode_buffer;
 }
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0)
 ssize_t dadfs_read(struct file * filp, char __user * buf, size_t len,
 		      loff_t * ppos)
+#else
+ssize_t dadfs_read(struct kiocb *kiocb, struct iov_iter *to)
 {
 	/* After the commit dd37978c5 in the upstream linux kernel,
 	 * we can use just filp->f_inode instead of the
 	 * f->f_path.dentry->d_inode redirection */
-	struct dadfs_inode *inode =
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 18, 0)
+		struct file *filp = kiocb->ki_filp;
+		size_t len = to->count;
+		loff_t *ppos = &(kiocb->ki_pos);
+	#endif
+		struct dadfs_inode *inode =
 	    DADFS_INODE(filp->f_path.dentry->d_inode);
 	struct buffer_head *bh;
 
@@ -299,7 +307,12 @@ ssize_t dadfs_read(struct file * filp, char __user * buf, size_t len,
 	buffer = (char *)bh->b_data;
 	nbytes = min((size_t) inode->file_size, len);
 
-	if (copy_to_user(buf, buffer, nbytes)) {
+	#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 18, 0)
+		if (!copy_to_iter(buffer, nbytes, to))	// when error occurs, return 0
+	#else
+		if (copy_to_user(buf, buffer, nbytes)) 
+	#endif
+	{
 		brelse(bh);
 		printk(KERN_ERR
 		       "Error copying file contents to the userspace buffer\n");
@@ -472,7 +485,11 @@ ssize_t dadfs_write(struct kiocb *kiocb, struct iov_iter *from)
 }
 
 const struct file_operations dadfs_file_operations = {
-	.read = dadfs_read,
+	#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 18, 0)
+		.read_iter = dadfs_read,
+	#else
+		.read = dadfs_read,
+	#endif
 	#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 18, 0)
 		.write_iter = dadfs_write,
 	#else
