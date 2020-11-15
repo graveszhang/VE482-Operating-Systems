@@ -15,4 +15,4 @@ This repository contains the lecture materials for VE482 FA2020, the introductio
 |Lab 4 |sqlite3 | [Database manipulation](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l4/Lab4%20Report.md)| Oct 14, 2020|
 |Lab 5 |Layer programming |  | Oct 26, 2020 |
 |Lab 6 |Zathura-pdf, plugin| |Nov 8, 2020|
-|Lab 7 |File system| [dadfs](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/tree/master/lab/l7/dadfs)|Nov 15, 2020|
+|Lab 7 |Kernel module, File system| [dadfs](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/tree/master/lab/l7/dadfs)|Nov 15, 2020|
