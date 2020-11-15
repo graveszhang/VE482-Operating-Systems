@@ -352,12 +352,25 @@ int dadfs_inode_save(struct super_block *sb, struct dadfs_inode *sfs_inode)
 
 /* FIXME: The write support is rudimentary. I have not figured out a way to do writes
  * from particular offsets (even though I have written some untested code for this below) efficiently. */
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0)
 ssize_t dadfs_write(struct file * filp, const char __user * buf, size_t len,
 		       loff_t * ppos)
+#else
+ssize_t dadfs_write(struct kiocb *kiocb, struct iov_iter *from)
+
+
+#endif
 {
 	/* After the commit dd37978c5 in the upstream linux kernel,
 	 * we can use just filp->f_inode instead of the
 	 * f->f_path.dentry->d_inode redirection */
+
+	#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 18, 0)
+		struct file * filp = kiocb->ki_filp;
+		size_t len = from->count;
+		loff_t *ppos = &(kiocb->ki_pos);
+	#endif
+
 	struct inode *inode;
 	struct dadfs_inode *sfs_inode;
 	struct buffer_head *bh;
