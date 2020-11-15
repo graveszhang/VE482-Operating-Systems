@@ -1,0 +1,8 @@
+<plugins>
+    <plugin name="linked-csv">
+        <library path="./csv.so">
+        </library>
+        <entry name="csv">
+        </entry>
+    </plugin>
+</plugins>
