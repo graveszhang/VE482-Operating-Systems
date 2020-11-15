@@ -422,7 +422,12 @@ ssize_t dadfs_write(struct kiocb *kiocb, struct iov_iter *from)
 		return retval;
 	}
 
-	if (copy_from_user(buffer, buf, len)) {
+	#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 18, 0)
+		if (!copy_from_iter(buffer, len, from))
+	#else
+		if (copy_from_user(buffer, buf, len)) 
+	#endif
+	{
 		brelse(bh);
 		printk(KERN_ERR
 		       "Error copying file contents from the userspace buffer to the kernel space\n");
