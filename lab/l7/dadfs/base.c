@@ -16,6 +16,7 @@
 #include <linux/blkdev.h>
 
 #include "sblock.h"
+#include <linux/uio.h>
 
 #ifndef f_dentry
 #define f_dentry f_path.dentry
