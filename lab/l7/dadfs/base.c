@@ -270,10 +270,10 @@ struct dadfs_inode *dadfs_get_inode(struct super_block *sb,
 }
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0)
-ssize_t dadfs_read(struct file * filp, char __user * buf, size_t len,
-		      loff_t * ppos)
+ssize_t dadfs_read(struct file * filp, char __user * buf, size_t len, loff_t * ppos)
 #else
 ssize_t dadfs_read(struct kiocb *kiocb, struct iov_iter *to)
+#endif
 {
 	/* After the commit dd37978c5 in the upstream linux kernel,
 	 * we can use just filp->f_inode instead of the
