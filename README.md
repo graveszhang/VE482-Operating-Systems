@@ -17,3 +17,4 @@ This repository contains the lecture materials for VE482 FA2020, the introductio
 |Lab 5 |Layer programming |  | Oct 26, 2020 |
 |Lab 6 |Zathura-pdf, plugin| |Nov 8, 2020|
 |Lab 7 |Kernel module, File system| [dadfs](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/tree/master/lab/l7/dadfs)|Nov 15, 2020|
+|Lab 8 |Memory management| [Minix LRU->MRU](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/tree/master/lab/l8/region.c)|Nov 20, 2020|
