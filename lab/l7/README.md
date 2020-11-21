@@ -42,35 +42,35 @@ Next, we modify ```retval``` to let it formally use ```generic_write_checks```.
 
 Finally, we add version control for ```.write``` and the compile is success!
 
-![1](D:\VE482\lab\l7\img\1.png)
+![1](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l7/img/1.png)
 
 2. create a small virtual disk (to be formated in dadfs): 
 
-![2](D:\VE482\lab\l7\img\2.png)
+![2](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l7/img/2.png)
 
 3. create a small virtual disk (to be used as dadfs' journal):
 
-![3](D:\VE482\lab\l7\img\3.png)
+![3](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l7/img/3.png)
 
 4. initialize the journal:
 
-![4](D:\VE482\lab\l7\img\4.png)
+![4](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l7/img/4.png)
 
 5. Format the disk
 
-![5](D:\VE482\lab\l7\img\5.png)
+![5](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l7/img/5.png)
 
 6. load dadfs module
 
-![6](D:\VE482\lab\l7\img\6.png)
+![6](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l7/img/6.png)
 
 7. mount disk
 
-![7](D:\VE482\lab\l7\img\7.png)
+![7](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l7/img/7.png)
 
 We can then use ```mount -l``` to check whether our dadfs has been correctly mounted.
 
-![7-2](D:\VE482\lab\l7\img\7-2.png)
+![7-2](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l7/img/7-2.png)
 
 Note that the last line denots that we have dadfs in ```/tmp```
 
@@ -83,19 +83,19 @@ After a very casual testing for dadfs, we have the following initial findins:
 
 - mkdir, cat, rm, ls, cd, touch seems fine.
 
-![8](D:\VE482\lab\l7\img\8.png)
+![8](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l7/img/8.png)
 
 - We've also found a word from dad...
 
-![8-2](D:\VE482\lab\l7\img\8-2.png)
+![8-2](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l7/img/8-2.png)
 
 9. check the logs
 
-![9](D:\VE482\lab\l7\img\9.png)
+![9](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l7/img/9.png)
 
 10. umount disk
 
-![10](D:\VE482\lab\l7\img\10.png)
+![10](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l7/img/10.png)
 
 11. unload module
 
