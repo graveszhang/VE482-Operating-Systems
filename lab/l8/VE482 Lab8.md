@@ -66,7 +66,7 @@
 
   ```LRU``` implemented in ```/server/vm/region.c```.  Notice that it uses a LRU list to store various blocks, and always maintain a pointer to the youngest block and oldest block. The LRU list is a double-linked list, like what is shown below:
 
-  ![image-20201121175021508](4.png)
+  ![image-20201121175021508](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l8/img/4.png)
 
   When the pagefault occurs, the oldest page will be removed and the pointer will be point to the next element in the list.
 
@@ -104,11 +104,11 @@
 
   Before running `time grep -r "mum" /usr/src`.
 
-  ![image-20201121163134095](1.png)
+  ![image-20201121163134095](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l8/img/1.png)
 
   After running `time grep -r "mum" /usr/src.`
 
-  ![image-20201121163222096](2.png)
+  ![image-20201121163222096](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l8/img/2.png)
 
   It can detected that when running `time grep -r "mum" /usr/src`, the `grep` command takes 356K memory and its CPU usage is 16.52%.
 
@@ -156,7 +156,7 @@
 
   After recompilation, the result when running `time grep -r "mum" /usr/src` is shown below:
 
-  ![image-20201121172612265](3.png)
+  ![image-20201121172612265](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l8/img/3.png)
 
   It can be detected that this time `grep` is taking more memory (400K) and more CPU usage (28.38%) .
 
