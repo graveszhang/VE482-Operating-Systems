@@ -30,7 +30,11 @@ Although kernel functions return a negative number to signal an error, and the v
 
 By using ```ls -l /dev```, we have the following result
 
+<<<<<<< HEAD
+![pic1](D:\SJTU\2020-Fall\VE482\2_labs\lab9\pic1.png)
+=======
 ![image-20201123225940161](C:\Users\grave\AppData\Roaming\Typora\typora-user-images\image-20201123225940161.png)
+>>>>>>> c2665f0e71d7c5f36a3c05a5cf9d1cb1506ced3f
 
 From above, we notice that there are two numbers with the form as ```[xx, yy]```, where ```xx``` denotes the major number and  ```yy```  denotes the minor number for the device. 
 
@@ -57,4 +61,64 @@ struct file_operations fun{
 
 - Add the below API 's inside __init fuction of the driver
   - ```cl = class_create(THIS_MODULE ,"x")``` where x - Name to be displayed inside /sys/class/ when driver is loaded.
+<<<<<<< HEAD
   - Use device_create () kernel api with ```device_create(cl, NULL, dev, NULL, "d")``` where device file to be created under ```/dev```.
+
+- Where are the following terms located in linux source code
+
+  - `module_init`: defined as a prototype: `include/linux/module.h`
+
+  - `module_exit`: defined as a prototype: `include/linux/module.h`
+  - `printk`:  defined as a prototype: `include/linux/printk.h`
+
+  - `container_of`: defined as a macro: `include/linux/kernel.h`
+
+  - `dev_t`: defined as a typedef: `include/linux/types.h`
+
+  - `MAJOR`: defined as a macro: `include/linux/kdev_t.h`
+  - `MINOR`: defined as a macro: `include/linux/kdev_t.h`
+
+  - `MKDEV`: defined as a macro`include/linux/kdev_t.h`
+  - `alloc_chardev_region`: 
+    - defined as a prototype: `include/linux/fs.h`
+    - defined as a function: `fs/char_dev.c`
+  - `module_param`: refered as `kernel/module.c`
+  - `cdev_init`: defined as a prototype:  `include/linux/cdev.h`
+  - `cdev_add`:  defined as a prototype:  `include/linux/cdev.h`
+  - `cdev_del`: defined as a prototype:  `include/linux/cdev.h`
+  - `THIS_MODULE`: 
+    - defined in as a macro: `include/linux/export.h`
+    - referred in: `include/linux/module.h`
+
+- How to generate random numbers when working inside the Linux kernel? You think that a while back you read something about getting the current time.
+
+  To generate random numbers in kernel space, we can use `void get_random_bytes(void *buf, int nbytes)` defined in  `include/linux/random.h`. However, the returned value is a pseudorandom number, to make it truely random, we can divide it by time, which can be obtained through `void getnstimeofday(struct timespec *ts)` from `linix/time.h`
+
+- How to define and specify module options?
+
+  `module_param(name, type, perm)` enables defining module parameters during `insmod`, where:
+
+  - `name` name of the variable
+  - `type`: type of variable
+  - `perm`: visibility in sysfs (0 if the variable is not to appear in sysfs, i.e. unchanged & unseen after `insmod`)
+
+  e.g. Assign a major number when `insmod`:
+
+  ```c
+  int gen_sides = 20;
+  module_param(gen_sides, int, 0);
+  ```
+
+  Then we can specify the module option on `insmod`:
+
+  ```bash
+  insmod dicedevice.ko gen_sides=30
+  ```
+
+### Code Implementation
+
+See `/src`, and check `README.md` to learn how to use the dice device.
+
+=======
+  - Use device_create () kernel api with ```device_create(cl, NULL, dev, NULL, "d")``` where device file to be created under ```/dev```.
+>>>>>>> c2665f0e71d7c5f36a3c05a5cf9d1cb1506ced3f
