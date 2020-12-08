@@ -10,6 +10,7 @@ This repository contains the lecture materials for VE482 FA2020, the introductio
 |Homework 5 |Scheduling, Deadlocks, The reader-writer problem | [Banker's Alg](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/tree/master/homework/h5/banker_alg) | Oct 30, 2020 |
 | Homework 6 |Page table, Vulnerability, thrashing||Nov 14, 2020|
 | Homework 7 |Page replacement algorithm||Nov 20, 2020|
+| Homework 8 |I/O, Multiprocessor, File system, Security||Dec 2, 2020|
 |Lab 1 |Hardware overview, basic shell|  |Sep 12, 2020|
 |Lab 2 |Minix3, bash scripting|  |Sep 18, 2020|
 |Lab 3 |sed, awk, Regex  |[Shanghai AQI](https://github.com/graveszhang/VE482-Intro-to-Operating-Systems/blob/master/lab/l3/sh_air.sh)|Sep 30, 2020|
