@@ -1,5 +1,5 @@
 ## VE482-Intro-to-Operating-Systems
-This repository contains the lecture materials for VE482, Introduction to Operating Systems, at University of Michigan, Shanghai Jiao Tong University Joint Institute.
+This repository contains the lecture materials for VE482 Introduction to Operating Systems, at University of Michigan, Shanghai Jiao Tong University Joint Institute.
 
 |No | Topics                           | Coding | Date |
 |----------|----------------------------------|------------|---------|
