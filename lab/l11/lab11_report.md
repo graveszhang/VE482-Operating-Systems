@@ -36,7 +36,21 @@
 apt-get install fuse libfuse-dev
 ```
 
+### Locate the hidden file
 
+After downloading from ji-git, we found a file named ```.del```
+
+Open the file use ```cd .del && ll```
+
+Then we found all the selecton codes and other files  as follows.
+
+```bash
+drwxrwxr-x@ 6 gravescn  staff    192 Dec  2 23:15 .
+drwxrwxr-x@ 4 gravescn  staff    128 Dec  2 15:54 ..
+-rw-rw-r--@ 1 gravescn  staff  12288 Nov 30 21:28 .lemondbfs.c.swp
+-rw-rw-r--@ 1 gravescn  staff    294 Dec 23  2017 Makefile
+-rw-rw-r--@ 1 gravescn  staff   2445 Oct 18  2018 README
+```
 
 ### Recover the file
 
@@ -46,13 +60,15 @@ To recover `lemondbfs.c` from `.lemondbfs.c.swp`, run
 vim -r .lemondbfs.c.swp
 ```
 
+And then we can reveal the original(failed) code file 
 
+```bash
+-rw-rw-r--@ 1 gravescn  staff   4722 Dec  2 23:05 lemondbfs.c
+```
 
 ### Rewrite lemondbfs
 
 See `lemondbfs.c`
-
-Still not finished
 
 ### Build
 

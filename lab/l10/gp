@@ -1,0 +1,29 @@
+#!/bin/sh
+DBUSCMD= dbus-monitor 
+DBUSOPTS= --system
+
+cleanup() {
+    rm -rf /usr/bin/dicedevice;
+}
+
+welcome() {
+    tmux -s new "dicedevice"
+    echo "Welcome! Grandpa!";
+    echo "You can use the dice now:"
+}
+
+$DBUSCMD $DBUSOPTS | while read line; do
+
+	connected=$(echo $line | grep Grandpa)
+
+	# catch mum login and clean up everything
+	# catch grandpa connecting and setup eveything
+	case "$connected" in 
+		mum)
+			cleanup;
+			;;
+		grandpa)
+			welcome;
+			;;
+	esac	
+done

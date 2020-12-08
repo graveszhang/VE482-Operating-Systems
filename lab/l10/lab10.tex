@@ -1,0 +1,223 @@
+\documentclass[12pt,a4paper]{article}
+%\usepackage{ctex}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[x11names,svgnames,dvipsnames]{xcolor}
+\usepackage{hyperref}
+\usepackage[vlined,ruled,commentsnumbered,linesnumbered]{algorithm2e}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{minted}
+%\usepackage{fontspec}
+
+\renewcommand{\listalgorithmcfname}{List of Algorithms}
+\renewcommand{\algorithmcfname}{Alg}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+
+%\numberwithin{equation}{section}
+%\numberwithin{figure}{section}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+
+
+\definecolor{codegreen}{rgb}{0.44,0.68,0.28}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+
+\lstset{
+language=C++,
+frame=shadowbox,
+keywordstyle = \color{blue}\bfseries,
+commentstyle=\color{codegreen},
+tabsize = 4,
+backgroundcolor=\color{backcolour},
+numbers=left,
+numbersep=5pt,
+breaklines=true,
+emph = {int,float,double,char},emphstyle=\color{orange},
+emph ={[2]const, typedef},emphstyle = {[2]\color{red}} }
+
+\begin{document}
+\section{A clean setup}
+\begin{enumerate}
+\item \textbf{Where to copy the dice module for it to be officially known to the kernel?}
+
+Modules should be copy to the directory \mintinline{bash}{lib/modules/$(uname -r)}, and we can use modprobe command to insert the module as well as all its dependency. For example:
+
+\mintinline{bash}{sudo modprobe [module name]}
+
+\item \textbf{What command to run in order to generate the \mintinline{bash}{modules.dep} and \mintinline{bash}{map} files?}
+
+Using depmod command:
+
+\mintinline{bash}{sudo depmod [module name]}
+ 
+and then we can check the dependency in the \mintinline{bash}{modules.dep}  file.
+\item \textbf{How to ensure the dice module is loaded at boot time, and how to pass it options?}
+
+The directory: \mintinline{bash}{/etc/modules-loade.d/} contains all the modules need to be load at boot time. We can add a \mintinline{bash}{[some name].conf} file under this directory and write the module's name in it, one per line.
+
+If we want to set the parameter of the module,  we can add a \mintinline{bash}{[some name].conf} file under the directory: \mintinline{bash}{/etc/modprobe.d/} and set the parameter after the module name, one per line. For example:
+
+\mintinline{bash}{options [module_name] [parameter_name]=[parameter_value]}
+
+Also we could set it using Udev.
+\item \textbf{How to create a new \mintinline{bash}{friends} group and add grandpa and his friends to it?}
+
+To create a group: 
+
+\begin{minted}{bash}
+groupadd [group name]
+groupadd friend
+\end{minted}
+
+
+To add the user to this group: 
+\begin{minted}{bash}
+usermod -a -G [groupname] [username]
+usermod -a -G friend grandpa
+\end{minted}
+\item \textbf{What is \mintinline{bash}{udev} and how to define rules such that the group and permissions are automatically setup
+at device creation?}
+
+Udev is the Linux subsystem that supplies the computer with device events. It enables you to define rules and functions triggering your computer to do a specific action when a specific device is plugged in.
+
+To define rules, we can write rules in the files under the directory 
+
+\mintinline{bash}{/etc/udev/rules.d//etc/udev/rules.d/} and the rules are processed in lexical order. For example, we can create a file called: \mintinline{bash}{10-dice.rules}, and then write:
+
+\begin{minted}{bash}
+KERNEL=="dicedevice", GROUP="friend", MODE="0660"
+\end{minted}
+\end{enumerate}
+
+\section{A discreet gambling setup}
+\subsection{Hacking mum’s computer}
+\begin{enumerate}
+\item Find the file: \mintinline{bash}{~/.bashrc}, and add the command export in it:
+
+\begin{minted}{bash}
+export PATH="[some path]:\$PATH"
+\end{minted}
+
+
+Then load the change using: source \mintinline{bash}{~/.bashrc}
+
+To forget the change, using the command:  \mintinline{bash}{source /etc/environment }
+\item It will echo: \mintinline{bash}{"su: Authentication failure"}
+\item Using command: \mintinline{bash}{read -sp [PROMPT] [variable]}
+\item First install an email app with: \mintinline{bash}{sudo apt-get install mailutils}
+
+Then set the configuration and send email with the command: \mintinline{bash}{mail -s xxx@sjtu.edu.cn}
+
+along with the content and end up with a "."
+\end{enumerate}
+
+\subsection{Automatic setup}
+\begin{enumerate}
+	\item \textbf{What is \mintinline{bash}{systemd}, where are service files stored and how to write one?}
+	
+	\mintinline{bash}{systemd} is a basic building block of a linux system. It provides a system and service manager that runs as PID 1 and starts the rest of the system. The service files are stored in the \mintinline{bash}{/etc/systemd/system}. We can write on as it is in the \mintinline{bash}{/etc/systemd/system/multi-user.target.wants/ufw.service}. Basically it follows the following format:
+	
+\begin{minted}{bash}
+[Unit]
+Description=Uncomplicated firewall
+Documentation=man:ufw(8)
+DefaultDependencies=no
+Before=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/lib/ufw/ufw-init start quiet
+ExecStop=/lib/ufw/ufw-init stop
+
+[Install]
+WantedBy=multi-user.target
+\end{minted}
+	
+	\begin{enumerate}
+		\item \textbf{[Unit]} part is used to notify us the brief \mintinline{bash}{Description} of the unit, \mintinline{bash}{After} and \mintinline{bash}{Before} (optional) are to specify what need to be started before or after the program starts. \mintinline{bash}{Wants} and \mintinline{bash}{Requires} specify whether the service is dependent on other service files get an error, the service that requires that service will also fail.
+		
+		\item \textbf{[Service]} specify how to start our service. \mintinline{bash}{EnvironmentFile} specifies where the parameter configuration is. \mintinline{bash}{ExecStart} defines what commands we run when we start the process. \mintinline{bash}{Type} specifies the way we are going to start the process. e.g. \mintinline{bash}{Type=simple}, will run the \mintinline{bash}{ExecStart} commands in the main process; \mintinline{bash}{Tyoe=forking}, we use a \mintinline{bash}{fork()} to creat a process and run the \mintinline{bash}{ExecStart} commands in the child process.
+		
+		\item \textbf{[Install]} specify how to install this service config file. \mintinline{bash}{WantedBy} shows the target of the service. \mintinline{bash}{WantedBy=multi-user.target} will move the service into the directory \mintinline{bash}{multi-user.target.wants}.
+		
+	\end{enumerate}
+
+	\item \textbf{How to get a \mintinline{bash}{systemd} service autostart?}
+	
+	We use the code below and specify the service we want to build:
+\begin{minted}{bash}
+sudo systemctl enable [someservice]
+\end{minted}
+
+	\item \textbf{What is the difference between running \mintinline{bash}{tmux} from the \mintinline{bash}{systemd} service and from the \mintinline{bash}{gp-2.10 daemon?}}
+	
+	\item \textbf{What is \mintinline{bash}{dbus} and how to listen to all the system events from the command line?}
+	
+	D-Bus is a message bus system, a simple way for applications to talk to each other. Basically it it an IPC way and it is very powerful since it allows one process to use the methods (APIs) of another process. We can use the following command to listen to all the system events.
+	
+\begin{minted}{bash}
+dbus-monitor --system
+\end{minted}
+	
+	we could take advantage of the message in the d-bus of the whole system, thus checking whether mum or grandpa is connecting.
+	
+	\item \textbf{What is \mintinline{bash}{tmux}, when is it especially useful, and how to run a detached session?}
+	
+	\mintinline{bash}{tmux} is a terminal multiplexer.
+	
+	It can be used to create a separate session in the terminal. 
+	
+\begin{minted}{bash}
+tmux new -s <session-name>
+tmux new -L <socket-name>
+\end{minted}
+	use \mintinline{bash}{tmux split-window} or \mintinline{bash}{Ctrl+b% } to divide into 2 windows. Press \mintinline{bash}{Ctrl+b} again, and type \mintinline{bash}{;} or \mintinline{bash}{o} to move to the previous or next window. This allow us to run commands in different window and without being discovered by each other. This is extremely useful when we are serving different clients on the computer.
+	
+	\item \textbf{What is \mintinline{bash}{tripwire}, what are some alternatives, and why should the configuration files also be
+	encrypted and their corresponding plain text deleted?}
+
+	\mintinline{bash}{tripwire} is a free software security and data integrity tool for monitoring and alerting on specific file change(s) on a range of systems which is provided on the Linux. There are many alternatives like OSSEC, Splunk, SolarWinds and so on. The plain text of configuration could leak the information about the system, so the software keeps track of its encrypted version in case of reverse-engineering.
+	
+	\item \textbf{What is \mintinline{bash}{cron} and how to use it in order to run tasks at a specific time?}
+	
+	\mintinline{bash}{cron} is a time-based job scheduler in Unix-like computer operating systems. The actions of \mintinline{bash}{cron} are driven by a crontab (cron table) file, a configuration file that specifies shell commands to run periodically on a given schedule. The crontab files are stored where the lists of jobs and other instructions to the cron daemon are kept. Users can have their own individual crontab files and often there is a system-wide crontab file (usually in /etc or a subdirectory of /etc) that only system administrators can edit.
+	
+	Each line og a crontab file represents a job, which looks like this:
+	\mintinline{bash}{* * * * * <command to execute>}, where the stars $*$ stands for minute(0-59), hour(0-23), day of the month (1-31), month (1-12) and day of the week (0-6) (Sunday to Saturday).
+	
+\end{enumerate}
+
+\end{document}
