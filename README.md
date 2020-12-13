@@ -23,3 +23,5 @@ This repository contains the lecture materials for VE482 Introduction to Operati
 |Lab 10 |systemd, dbus| |Nov 30, 2020|
 |Lab 11 |FUSE| [lemondbfs](https://github.com/graveszhang/VE482-Operating-Systems/blob/master/lab/l11/lab11_report.md)|Dec 3, 2020|
 
+## Honor Code
+If there are same questions or labs in the future, it is the responsibility of JI students not to copy or modify these codes, or TeX files because it is against the Honor Code. The owner of this repository dosen't take any commitment for other's faults.
