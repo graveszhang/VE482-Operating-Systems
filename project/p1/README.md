@@ -13,7 +13,11 @@ make
 ./p1
 ```
 
-### Features
+### Demo
+
+![A simple demo of mumsh](https://github.com/graveszhang/VE482-Operating-Systems/blob/master/project/p1/test/04.png)
+
+### Supported Features
 
 1. Write a working read/parse/execute loop and an exit command; [5]
 
